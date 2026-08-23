@@ -11,6 +11,23 @@ input#nav-toggle:checked ~ #nav-menu {
   @apply max-lg:block;
 }
 
+/* sidebar drawer toggle */
+input#sidebar-toggle:checked + div #sidebar-show-icon {
+  @apply hidden;
+}
+
+input#sidebar-toggle:checked + div #sidebar-hide-icon {
+  @apply block;
+}
+
+input#sidebar-toggle:checked ~ #sidebar-overlay {
+  @apply block;
+}
+
+input#sidebar-toggle:checked ~ #sidebar {
+  @apply translate-x-0;
+}
+
 /* swiper pagination */
 .swiper-pagination-bullet {
   @apply size-2.5! bg-light! opacity-100! dark:bg-darkmode-light!;

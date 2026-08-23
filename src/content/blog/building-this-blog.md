@@ -3,7 +3,7 @@ title: "이 블로그를 Astro + GitHub Pages로 만든 과정"
 description: "Astroplate 테마와 GitHub Actions로 개인 개발 블로그를 세팅한 기록."
 date: 2026-08-23T00:00:00Z
 author: "denver"
-categories: ["blog"]
+categories: ["회고/TIL"]
 tags: ["astro", "github-pages"]
 draft: false
 ---

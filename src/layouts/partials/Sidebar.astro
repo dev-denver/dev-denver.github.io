@@ -1,0 +1,127 @@
+---
+import Logo from "@/components/Logo.astro";
+import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
+import categoriesConfig from "@/config/categories.json";
+import config from "@/config/config.json";
+import menu from "@/config/menu.json";
+import { getAllTaxonomy } from "@/lib/taxonomyParser.astro";
+import { slugify } from "@/lib/utils/textConverter";
+import { IoSearch } from "react-icons/io5";
+
+export interface NavigationLink {
+  name: string;
+  url: string;
+}
+
+const { main }: { main: NavigationLink[] } = menu;
+const { navigation_button, settings } = config;
+const { pathname } = Astro.url;
+
+const BLOG_FOLDER = "blog";
+const allCategorySlugs = await getAllTaxonomy(BLOG_FOLDER, "categories");
+const categoryItems = categoriesConfig.list.map(({ label }) => {
+  const slug = slugify(label);
+  const count = allCategorySlugs.filter((c) => c === slug).length;
+  return { label, slug, count };
+});
+---
+
+<input type="checkbox" id="sidebar-toggle" class="hidden" />
+
+<!-- mobile top bar -->
+<div class="mobile-topbar">
+  <Logo />
+  <label for="sidebar-toggle" class="cursor-pointer" aria-label="메뉴 열기">
+    <svg id="sidebar-show-icon" class="h-6 fill-current block" viewBox="0 0 20 20">
+      <title>Menu Open</title>
+      <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
+    </svg>
+    <svg id="sidebar-hide-icon" class="h-6 fill-current hidden" viewBox="0 0 20 20">
+      <title>Menu Close</title>
+      <polygon
+        points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
+        transform="rotate(45 10 10)"></polygon>
+    </svg>
+  </label>
+</div>
+
+<!-- overlay: clicking it closes the drawer -->
+<label
+  for="sidebar-toggle"
+  id="sidebar-overlay"
+  class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"
+  aria-hidden="true"
+></label>
+
+<aside id="sidebar" class="sidebar">
+  <div class="mb-8 hidden lg:block">
+    <Logo />
+  </div>
+
+  <nav class="mb-8">
+    <ul class="space-y-1">
+      {
+        main.map((item) => (
+          <li>
+            <a
+              href={item.url}
+              class={`sidebar-link block ${
+                (pathname === `${item.url}/` || pathname === item.url) &&
+                "active"
+              }`}
+            >
+              {item.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="mb-8">
+    <h5 class="mb-4 text-sm font-semibold uppercase text-text-light dark:text-darkmode-text-light">
+      Categories
+    </h5>
+    <ul class="space-y-1">
+      {
+        categoryItems.map(({ label, slug, count }) => (
+          <li>
+            <a href={`/categories/${slug}`} class="sidebar-category-link">
+              <span>{label}</span>
+              <span>({count})</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="mt-auto flex items-center gap-5 pt-6">
+    {
+      settings.search && (
+        <button
+          class="text-text-dark hover:text-primary dark:text-white dark:hover:text-darkmode-primary text-xl"
+          aria-label="search"
+          data-search-trigger
+        >
+          <IoSearch />
+        </button>
+      )
+    }
+    <ThemeSwitcher />
+    {
+      navigation_button.enable && (
+        <a
+          class="btn btn-outline-primary btn-sm"
+          href={navigation_button.link}
+          target={
+            navigation_button.link.startsWith("http") ? "_blank" : "_self"
+          }
+          rel={navigation_button.link.startsWith("http") ? "noopener" : ""}
+        >
+          {navigation_button.label}
+        </a>
+      )
+    }
+  </div>
+</aside>

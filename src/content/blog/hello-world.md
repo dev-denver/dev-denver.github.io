@@ -4,7 +4,7 @@ meta_title: ""
 description: "Frontmatter reference for future posts."
 date: 2026-08-23T00:00:00Z
 image: ""
-categories: ["meta"]
+categories: ["언어/CS 기초"]
 author: "denver"
 tags: ["meta"]
 draft: true

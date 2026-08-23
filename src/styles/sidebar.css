@@ -1,0 +1,20 @@
+.sidebar {
+  @apply bg-body dark:bg-darkmode-body border-border dark:border-darkmode-border fixed top-0 left-0 z-50 flex h-screen w-72 -translate-x-full flex-col overflow-y-auto border-r p-6 transition-transform duration-300;
+  @apply lg:sticky lg:z-30 lg:translate-x-0 lg:shrink-0;
+}
+
+.sidebar-link {
+  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary rounded p-2 font-semibold transition;
+}
+
+.sidebar-link.active {
+  @apply text-primary dark:text-darkmode-primary;
+}
+
+.sidebar-category-link {
+  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary flex items-center justify-between rounded p-2 transition;
+}
+
+.mobile-topbar {
+  @apply bg-body dark:bg-darkmode-body border-border dark:border-darkmode-border sticky top-0 z-40 flex items-center justify-between border-b px-4 py-3 lg:hidden;
+}

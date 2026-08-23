@@ -1,16 +1,23 @@
 ---
 import BlogCard from "@/components/BlogCard.astro";
+import categoriesConfig from "@/config/categories.json";
 import Base from "@/layouts/Base.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
+import { humanize, slugify } from "@/lib/utils/textConverter";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import PageHeader from "@/partials/PageHeader.astro";
 
-// get static paths for all categories
+// get static paths for all categories: dynamic ones from post frontmatter,
+// plus the fixed sidebar categories (even ones with 0 posts so far)
 export async function getStaticPaths() {
   const BLOG_FOLDER = "blog";
-  const categories = await getTaxonomy(BLOG_FOLDER, "categories");
+  const categoriesFromPosts = await getTaxonomy(BLOG_FOLDER, "categories");
+  const fixedCategorySlugs = categoriesConfig.list.map(({ label }) =>
+    slugify(label),
+  );
+  const categories = [...new Set([...categoriesFromPosts, ...fixedCategorySlugs])];
 
   return categories.map((category) => {
     return {
@@ -21,6 +28,11 @@ export async function getStaticPaths() {
 
 const { category } = Astro.params;
 
+const slugToLabel = Object.fromEntries(
+  categoriesConfig.list.map(({ label }) => [slugify(label), label]),
+);
+const displayLabel = slugToLabel[category!] ?? humanize(category!);
+
 // get posts by category
 const BLOG_FOLDER = "blog";
 const posts = await getSinglePage(BLOG_FOLDER);
@@ -28,19 +40,25 @@ const filterByCategories = taxonomyFilter(posts, "categories", category!);
 const sortedPosts = sortByDate(filterByCategories);
 ---
 
-<Base title={category}>
-  <PageHeader title={category} />
+<Base title={displayLabel}>
+  <PageHeader title={displayLabel} />
   <div class="section-sm pb-0">
     <div class="container">
-      <div class="row">
-        {
-          sortedPosts.map((post) => (
-            <div class="mb-14 md:col-6 lg:col-4">
-              <BlogCard data={post} />
-            </div>
-          ))
-        }
-      </div>
+      {
+        sortedPosts.length === 0 ? (
+          <p class="pb-14 text-center text-text-light dark:text-darkmode-text-light">
+            아직 글이 없습니다.
+          </p>
+        ) : (
+          <div class="row">
+            {sortedPosts.map((post) => (
+              <div class="mb-14 md:col-6 lg:col-4">
+                <BlogCard data={post} />
+              </div>
+            ))}
+          </div>
+        )
+      }
     </div>
   </div>
 </Base>
