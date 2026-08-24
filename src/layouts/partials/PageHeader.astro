@@ -2,19 +2,35 @@
 import Breadcrumbs from "@/components/Breadcrumbs.astro";
 import { humanize } from "@/lib/utils/textConverter";
 
-const {
-  title = "",
-  humanizeTitle = true,
-}: { title?: string; humanizeTitle?: boolean } = Astro.props;
+interface Props {
+  title?: string;
+  subtitle?: string;
+  humanizeTitle?: boolean;
+}
+
+const { title = "", subtitle, humanizeTitle = true }: Props = Astro.props;
+
+const heading = humanizeTitle ? humanize(title) : title;
+
+// On the home page the trail would be a single crumb pointing at the page you
+// are already on.
+const isHome = Astro.url.pathname === "/";
 ---
 
 <section>
   <div class="container text-center">
     <div
-      class="rounded-2xl bg-gradient-to-b from-body to-light px-8 py-14 dark:from-darkmode-body dark:to-darkmode-light"
+      class="from-body to-light dark:from-darkmode-body dark:to-darkmode-light rounded-2xl bg-gradient-to-b px-8 py-14"
     >
-      <h1 set:text={humanizeTitle ? humanize(title) : title} />
-      <Breadcrumbs className="mt-6" />
+      <h1>{heading}</h1>
+      {
+        subtitle && (
+          <p class="text-text-light dark:text-darkmode-text-light mx-auto mt-4 max-w-[38rem]">
+            {subtitle}
+          </p>
+        )
+      }
+      {!isHome && <Breadcrumbs className="mt-6" currentLabel={heading} />}
     </div>
   </div>
 </section>

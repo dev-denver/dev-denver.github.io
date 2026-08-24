@@ -13,5 +13,18 @@
       "url": "/tags"
     }
   ],
-  "footer": []
+  "footer": [
+    {
+      "name": "블로그",
+      "url": "/blog"
+    },
+    {
+      "name": "태그",
+      "url": "/tags"
+    },
+    {
+      "name": "카테고리",
+      "url": "/categories"
+    }
+  ]
 }

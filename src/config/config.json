@@ -1,6 +1,7 @@
 {
   "site": {
     "title": "denver.log",
+    "tagline": "개발하면서 부딪힌 문제와 새로 배운 것을 정리해 둡니다.",
     "base_url": "https://dev-denver.github.io",
     "base_path": "/",
     "trailing_slash": false,
