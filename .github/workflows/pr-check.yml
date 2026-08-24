@@ -18,6 +18,8 @@ jobs:
         uses: ./.github/actions/setup-project
       - name: Format check
         run: npm run format:check
+      - name: Generate JSON
+        run: npm run generate-json
       - name: Type check
         run: npm run check
       - name: Build
