@@ -6,22 +6,22 @@ interface Props {
 }
 
 const { posts }: Props = Astro.props;
-const isSparse = posts.length <= 2;
 ---
 
+{
+  /* A single divided column rather than a 3-up card grid: these posts have no
+    thumbnails, and text-only cards in a wide grid leave most of each cell
+    empty. A list also keeps titles on one scan line. */
+}
 <h2 class="sr-only">게시글 목록</h2>
-<div class={`row ${isSparse ? "justify-center" : ""}`}>
-  {
-    posts.map((post) => (
-      <div
-        class={
-          isSparse
-            ? "mb-14 mx-auto md:col-8 lg:col-6"
-            : "mb-14 md:col-6 lg:col-4"
-        }
-      >
-        <BlogCard data={post} />
-      </div>
-    ))
-  }
+<div class="mx-auto max-w-[46rem]">
+  <ul class="divide-border dark:divide-darkmode-border divide-y">
+    {
+      posts.map((post) => (
+        <li class="py-8 first:pt-0">
+          <BlogCard data={post} />
+        </li>
+      ))
+    }
+  </ul>
 </div>

@@ -17,6 +17,13 @@
   }
 }
 
+/* Tag chips — shared by the post list and the post footer. Hover inverts the
+   chip rather than tinting it, since the palette has no accent hue. */
+.tag-chip {
+  @apply bg-light dark:bg-darkmode-light text-text-light dark:text-darkmode-text-light inline-block rounded px-2 py-1 text-xs no-underline transition;
+  @apply hover:bg-text-dark hover:text-body dark:hover:bg-darkmode-text-dark dark:hover:text-darkmode-body;
+}
+
 /* Previous / next post */
 .post-nav-link {
   @apply border-border dark:border-darkmode-border flex flex-col gap-1 rounded-lg border p-4 no-underline transition;
