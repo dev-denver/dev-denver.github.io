@@ -3,22 +3,26 @@ import categoriesConfig from "@/config/categories.json";
 import PostListPage from "@/layouts/PostListPage.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { extraPageParams, pageFromParam } from "@/lib/utils/paginate";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import { humanize, slugify } from "@/lib/utils/textConverter";
 
-// Dynamic categories from post frontmatter, plus the fixed sidebar list — the
-// sidebar links those even at zero posts, so they need a page to land on.
 export async function getStaticPaths() {
-  const categoriesFromPosts = await getTaxonomy("blog", "categories");
-  const fixedCategorySlugs = categoriesConfig.list.map(({ label }) =>
-    slugify(label),
-  );
+  const posts = await getSinglePage("blog");
   const categories = [
-    ...new Set([...categoriesFromPosts, ...fixedCategorySlugs]),
+    ...new Set([
+      ...(await getTaxonomy("blog", "categories")),
+      ...categoriesConfig.list.map(({ label }) => slugify(label)),
+    ]),
   ];
 
-  return categories.map((category) => ({ params: { category } }));
+  return categories.flatMap((category) => {
+    const count = taxonomyFilter(posts, "categories", category).length;
+    return extraPageParams(count).map((slug) => ({
+      params: { category, slug },
+    }));
+  });
 }
 
 const { category } = Astro.params;
@@ -38,6 +42,5 @@ const sortedPosts = sortByDate(taxonomyFilter(posts, "categories", category!));
   description={`${displayLabel} 카테고리의 글 목록`}
   posts={sortedPosts}
   section={`categories/${category}`}
-  currentPage={1}
-  emptyMessage="이 카테고리에 글이 아직 없습니다."
+  currentPage={pageFromParam(Astro.params.slug)}
 />
