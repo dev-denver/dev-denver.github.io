@@ -10,12 +10,8 @@ import { humanize, slugify } from "@/lib/utils/textConverter";
 
 export async function getStaticPaths() {
   const posts = await getSinglePage("blog");
-  const categories = [
-    ...new Set([
-      ...(await getTaxonomy("blog", "categories")),
-      ...categoriesConfig.list.map(({ label }) => slugify(label)),
-    ]),
-  ];
+  // Mirrors categories/[category].astro: only categories with posts.
+  const categories = await getTaxonomy("blog", "categories");
 
   return categories.flatMap((category) => {
     const count = taxonomyFilter(posts, "categories", category).length;
