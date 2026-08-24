@@ -16,6 +16,7 @@
 
 @layer components {
   @import "./components.css";
+  @import "./code.css";
   @import "./sidebar.css";
   @import "./buttons.css";
   @import "./search.css";

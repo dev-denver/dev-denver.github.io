@@ -198,7 +198,8 @@
   @apply prose-img:max-w-full prose-img:rounded;
   @apply prose-strong:text-text-dark dark:prose-strong:text-darkmode-text;
   @apply prose-hr:border-border dark:prose-hr:border-darkmode-border;
-  @apply prose-pre:rounded-lg prose-pre:bg-light dark:prose-pre:bg-darkmode-light;
+  /* Code block chrome lives on `.code-block` (see code.css); the `<pre>` keeps
+     Shiki's own theme background. */
   @apply prose-li:text-text prose-li:leading-[1.85] prose-li:my-[0.4em] dark:prose-li:text-darkmode-text;
   /* Was a 10px rule with 2xl text and 40px padding — it shouted louder than the
      body it was quoting. A quiet rule and body-sized text fit a reading log. */
