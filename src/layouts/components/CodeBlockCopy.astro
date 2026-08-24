@@ -1,0 +1,42 @@
+---
+// Wires up the copy buttons that rehypeCodeBlocks renders at build time.
+// One delegated listener rather than one per block, re-attached on
+// astro:page-load because ClientRouter swaps the document on navigation.
+---
+
+<script>
+  const COPY_LABEL = "복사";
+  const DONE_LABEL = "복사됨";
+  const RESET_DELAY = 1600;
+
+  function setupCodeCopy() {
+    document.querySelectorAll<HTMLElement>(".code-block").forEach((block) => {
+      const button = block.querySelector<HTMLButtonElement>("[data-code-copy]");
+      const code = block.querySelector("pre");
+      if (!button || !code || button.dataset.bound === "true") return;
+
+      button.dataset.bound = "true";
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.innerText);
+          button.textContent = DONE_LABEL;
+        } catch {
+          // Clipboard is unavailable over plain HTTP and in some browsers.
+          // Select the code so the reader can copy it by hand.
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+          return;
+        }
+        window.setTimeout(() => {
+          button.textContent = COPY_LABEL;
+        }, RESET_DELAY);
+      });
+    });
+  }
+
+  setupCodeCopy();
+  document.addEventListener("astro:page-load", setupCodeCopy);
+</script>

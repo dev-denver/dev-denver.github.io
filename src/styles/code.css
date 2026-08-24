@@ -1,0 +1,36 @@
+/* Shiki emits dual-theme output: the light theme lands in the inline `style`
+   and the dark theme in `--shiki-dark*` custom properties. Dark mode here is
+   the `.dark` class rather than prefers-color-scheme, so swap the values on
+   that class. `!important` is required — Shiki's own values are inline.
+   Astro names the element `.astro-code`, not `.shiki`. */
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.code-block {
+  @apply border-border dark:border-darkmode-border my-6 overflow-hidden rounded-lg border;
+}
+
+.code-block-header {
+  @apply bg-light dark:bg-darkmode-light border-border dark:border-darkmode-border flex items-center justify-between gap-4 border-b px-4 py-2;
+}
+
+.code-block-lang {
+  @apply text-text-light dark:text-darkmode-text-light font-mono text-xs tracking-wide uppercase;
+}
+
+.code-block-copy {
+  @apply text-text-light dark:text-darkmode-text-light rounded px-2 py-1 text-xs font-medium transition;
+  @apply hover:bg-body hover:text-text-dark dark:hover:bg-darkmode-body dark:hover:text-darkmode-text-dark;
+}
+
+/* `<pre>` is inside the wrapper now, so the border and rounding live on
+   `.code-block` and prose's own pre margin has to go. */
+.code-block .astro-code {
+  @apply my-0! overflow-x-auto rounded-none! px-4! py-4!;
+}

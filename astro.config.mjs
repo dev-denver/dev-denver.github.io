@@ -9,6 +9,7 @@ import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
 import sharp from "sharp";
 import config from "./src/config/config.json";
+import rehypeCodeBlocks from "./src/lib/rehype/rehypeCodeBlocks.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,7 +42,14 @@ export default defineConfig({
         remarkToc,
         [remarkCollapse, { test: "Table of contents" }],
       ],
+      rehypePlugins: [rehypeCodeBlocks],
     }),
-    shikiConfig: { theme: "one-dark-pro", wrap: true },
+    // Dual themes so code blocks follow the site theme. one-dark-pro was a
+    // dark theme rendered on a white page. `wrap: false` keeps long lines on
+    // one line and scrolls them, which preserves code alignment.
+    shikiConfig: {
+      themes: { light: "github-light", dark: "github-dark" },
+      wrap: false,
+    },
   },
 });
