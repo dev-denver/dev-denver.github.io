@@ -1,6 +1,6 @@
 {
   "site": {
-    "title": "Dev Denver",
+    "title": "denver.log",
     "base_url": "https://dev-denver.github.io",
     "base_path": "/",
     "trailing_slash": false,
@@ -9,7 +9,7 @@
     "logo_darkmode": "",
     "logo_width": "150",
     "logo_height": "30",
-    "logo_text": "Dev Denver"
+    "logo_text": "denver.log"
   },
 
   "settings": {
