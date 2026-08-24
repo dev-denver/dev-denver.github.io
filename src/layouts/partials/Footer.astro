@@ -20,7 +20,12 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
           {
             footer.map((menu) => (
               <li class="m-3 inline-block">
-                <a href={menu.url}>{menu.name}</a>
+                <a
+                  class="hover:text-text-dark dark:hover:text-darkmode-text-dark underline underline-offset-4"
+                  href={menu.url}
+                >
+                  {menu.name}
+                </a>
               </li>
             ))
           }

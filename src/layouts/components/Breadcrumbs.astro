@@ -1,45 +1,81 @@
 ---
+import menu from "@/config/menu.json";
 import { humanize } from "@/lib/utils/textConverter";
 
-const { className }: { className?: string } = Astro.props;
+interface Props {
+  className?: string;
+  /** Label for the final crumb, when the caller knows it (e.g. a category). */
+  currentLabel?: string;
+}
 
-const paths = Astro.url.pathname.split("/").filter((x) => x);
-let parts = [
-  {
-    label: "Home",
-    href: "/",
-    "aria-label": Astro.url.pathname === "/" ? "page" : undefined,
-  },
-];
+const { className, currentLabel }: Props = Astro.props;
 
-paths.forEach((label: string, i: number) => {
-  const href = `/${paths.slice(0, i + 1).join("/")}`;
-  label !== "page" &&
-    parts.push({
-      label: humanize(label.replace(".html", "").replace(/[-_]/g, " ")) || "",
-      href,
-      "aria-label": Astro.url.pathname === href ? "page" : undefined,
-    });
+// Korean labels for the sections, taken from the nav config so the two never
+// drift. Sections without a nav entry are named here.
+const sectionLabels: Record<string, string> = {
+  ...Object.fromEntries(
+    menu.main
+      .filter(({ url }) => url !== "/")
+      .map(({ url, name }) => [url.replace(/^\//, ""), name]),
+  ),
+  categories: "카테고리",
+  authors: "작성자",
+};
+
+const segments = Astro.url.pathname.split("/").filter(Boolean);
+
+const crumbs = [{ label: "홈", href: "/" }];
+
+segments.forEach((segment, index) => {
+  // "page" only exists to carry a page number; it is not a place.
+  if (segment === "page") return;
+
+  const href = `/${segments.slice(0, index + 1).join("/")}`;
+  const isLast = index === segments.length - 1;
+
+  crumbs.push({
+    label:
+      sectionLabels[segment] ??
+      (isLast && currentLabel
+        ? currentLabel
+        : humanize(segment.replace(/[-_]/g, " "))),
+    href,
+  });
 });
 ---
 
-<nav aria-label="Breadcrumb" class={className}>
-  <ol class="inline-flex" role="list">
+<nav aria-label="현재 위치" class={className}>
+  <ol class="inline-flex flex-wrap justify-center" role="list">
     {
-      parts.map(({ label, ...attrs }, index) => (
-        <li class="mx-1 capitalize" role="listitem">
-          {index > 0 && <span class="inlin-block mr-1">/</span>}
-          {index !== parts.length - 1 ? (
-            <a class="text-primary dark:text-darkmode-primary" {...attrs}>
-              {label}
-            </a>
-          ) : (
-            <span class="text-text-light dark:text-darkmode-text-light">
-              {label}
-            </span>
-          )}
-        </li>
-      ))
+      crumbs.map(({ label, href }, index) => {
+        const isLast = index === crumbs.length - 1;
+        return (
+          <li class="mx-1" role="listitem">
+            {index > 0 && (
+              <span class="mr-1" aria-hidden="true">
+                /
+              </span>
+            )}
+            {isLast ? (
+              // aria-current, not aria-label — the previous version put the
+              // literal string "page" into the accessible name.
+              <span
+                class="text-text-light dark:text-darkmode-text-light"
+                aria-current="page"
+              >
+                {label}
+              </span>
+            ) : (
+              <a
+                class="text-text-light dark:text-darkmode-text-light hover:text-text-dark dark:hover:text-darkmode-text-dark underline underline-offset-4"
+                href={href}
+              >
+                {label}
+              </a>
+            )}
+          </li>
+        );
+      })
     }
   </ol>
 </nav>

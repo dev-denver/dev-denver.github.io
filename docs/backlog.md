@@ -147,8 +147,10 @@ claude -c        # 직전 세션 이어받기
 
 ## Phase 5 — 마무리
 
-- [ ] **PR 14 · 홈/푸터**
-      히어로에 사이트 성격 태그라인 (현재 `h1`이 사이드바 로고와 같은 "denver.log"를 반복),
-      비어 있는 `menu.footer` 채우기, 404 개선.
+- [x] **PR 14 · 홈/푸터** — #22
+      `config.site.tagline` 추가 후 홈 히어로에 노출(기존엔 `h1`이 사이드바 로고와
+      같은 "denver.log"만 반복했다), `menu.footer` 채우기, 404에 글 목록 링크 추가.
+      함께 고침: 브레드크럼이 영문 "Home"이었고, 홈에서 자기 자신을 가리키는 항목 하나만
+      렌더했으며, `aria-current` 대신 `aria-label="page"`를 써서 접근 이름에 "page"가 들어갔다.
 - [ ] **PR 15 · 최종 점검**
       대비·포커스·랜드마크·Lighthouse 확인, `PRODUCT.md` 갱신.
