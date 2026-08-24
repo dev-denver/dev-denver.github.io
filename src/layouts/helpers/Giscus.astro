@@ -1,0 +1,73 @@
+---
+import config from "@/config/config.json";
+
+const { giscus } = config;
+const { className }: { className?: string } = Astro.props;
+---
+
+{
+  giscus.enable && (
+    <div class={className}>
+      <div id="giscus-container" />
+    </div>
+  )
+}
+
+<script>
+  import config from "@/config/config.json";
+
+  const { giscus } = config;
+
+  function currentGiscusTheme() {
+    return document.documentElement.classList.contains("dark")
+      ? "dark"
+      : "light";
+  }
+
+  function mountGiscus() {
+    const container = document.getElementById("giscus-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.crossOrigin = "anonymous";
+    const attrs: Record<string, string> = {
+      "data-repo": giscus.repo,
+      "data-repo-id": giscus.repo_id,
+      "data-category": giscus.category,
+      "data-category-id": giscus.category_id,
+      "data-mapping": giscus.mapping,
+      "data-reactions-enabled": giscus.reactions_enabled ? "1" : "0",
+      "data-input-position": giscus.input_position,
+      "data-lang": giscus.lang,
+      "data-theme": currentGiscusTheme(),
+      "data-loading": "lazy",
+    };
+    Object.entries(attrs).forEach(([key, value]) =>
+      script.setAttribute(key, value),
+    );
+    container.appendChild(script);
+  }
+
+  function syncGiscusTheme() {
+    const iframe = document.querySelector("iframe.giscus-frame");
+    if (!(iframe instanceof HTMLIFrameElement)) return;
+    iframe.contentWindow?.postMessage(
+      { giscus: { setConfig: { theme: currentGiscusTheme() } } },
+      "https://giscus.app",
+    );
+  }
+
+  // Runs on initial navigation
+  mountGiscus();
+  // Runs on view transitions navigation (re-map comments to the new page)
+  document.addEventListener("astro:after-swap", mountGiscus);
+
+  // Keep the embedded iframe's theme in sync with the site's own toggle
+  new MutationObserver(syncGiscusTheme).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+</script>
