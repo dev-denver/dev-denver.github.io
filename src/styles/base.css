@@ -50,6 +50,13 @@ strong {
   @apply font-semibold;
 }
 
+/* Focus: the palette is monochrome, so a visible outline is the only
+   affordance that marks the keyboard position. Applied with :where() so any
+   component can still override it. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  @apply outline-text-dark dark:outline-darkmode-text-dark rounded-xs outline-2 outline-offset-2;
+}
+
 code {
   @apply after:border-none;
 }
