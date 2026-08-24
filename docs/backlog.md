@@ -137,8 +137,13 @@ claude -c        # 직전 세션 이어받기
       `BlogPosting`/`WebSite` JSON-LD, 404는 `noindex` + canonical 생략.
       함께 고침: `plainify`가 남기던 개행이 `<title>`·og·JSON-LD에 들어가던 문제,
       `item-prop` 오타, `og:url`의 취약한 문자열 조합.
-- [ ] **PR 13 · OG 이미지 자동 생성**
-      빌드 타임 생성(정적 호스팅 제약 충족), 글 제목·날짜·브랜드 반영.
+- [x] **PR 13 · OG 이미지 자동 생성** — #21
+      satori + resvg로 빌드 타임에 `/og/<post-id>.png` 생성. 제목·카테고리·날짜·브랜드.
+
+      > 한글 폰트가 관건이었다. Noto Sans KR 전체는 10.4MB라 커밋도 매 빌드 다운로드도 부담이다.
+      > Google Fonts의 `text=` 서브셋 파라미터로 그 글에 쓰인 글자만 받으면 ~48KB다.
+      > **User-Agent가 중요하다** — 최신 UA는 woff2를 주는데 satori가 못 읽는다. 구형 UA로 요청해야 TTF가 온다.
+      > 폰트 요청이 실패하면 기존 정적 이미지로 대체해 빌드가 깨지지 않게 했다.
 
 ## Phase 5 — 마무리
 

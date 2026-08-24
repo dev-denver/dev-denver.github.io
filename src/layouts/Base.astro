@@ -35,6 +35,8 @@ export interface Props {
   image?: string;
   noindex?: boolean;
   canonical?: string;
+  /** Share card, when the page has one generated for it. */
+  ogImage?: string;
   /** "article" on blog posts, "website" everywhere else. */
   ogType?: "website" | "article";
   publishedTime?: Date;
@@ -50,6 +52,7 @@ const {
   image,
   noindex,
   canonical,
+  ogImage,
   ogType = "website",
   publishedTime,
   authorName,
@@ -64,8 +67,10 @@ const pageDescription = plainify(
 // page passed `canonical`, and no page ever did — so it never appeared.
 const canonicalUrl =
   canonical ?? new URL(Astro.url.pathname, config.site.base_url).href;
+// A generated share card wins over post frontmatter, which in turn wins over
+// the one shared fallback image.
 const imageUrl = new URL(
-  image || config.metadata.meta_image,
+  ogImage || image || config.metadata.meta_image,
   config.site.base_url,
 ).href;
 
