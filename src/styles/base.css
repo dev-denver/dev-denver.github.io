@@ -4,6 +4,19 @@ html {
 
 body {
   @apply bg-body text-base dark:bg-darkmode-body font-primary font-normal leading-relaxed text-text dark:text-darkmode-text;
+  /* Korean has no spaces inside a word but breaks between any two syllables by
+     default, so lines end mid-word. keep-all breaks on spaces instead, which is
+     how Korean is meant to wrap. break-word keeps long URLs from overflowing. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* Code must still break anywhere — it has no Korean word boundaries. */
+pre,
+code,
+kbd,
+samp {
+  word-break: normal;
 }
 
 h1,
@@ -12,7 +25,9 @@ h3,
 h4,
 h5,
 h6 {
-  @apply font-secondary font-bold leading-tight text-text-dark dark:text-darkmode-text-dark;
+  /* leading-snug rather than leading-tight: Hangul glyphs fill the full em box,
+     so 1.25 makes multi-line headings collide. */
+  @apply font-secondary font-bold leading-snug text-text-dark dark:text-darkmode-text-dark;
 }
 
 h1,

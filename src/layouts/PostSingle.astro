@@ -22,7 +22,11 @@ const { title, description, author, categories, image, date, tags } = post.data;
 <section class="section pt-7">
   <div class="container">
     <div class="row justify-center">
-      <article class="lg:col-8">
+      <!-- max-w caps the measure: `lg:col-8` alone runs ~880px on a wide
+           screen, well past a comfortable line length for Korean body text.
+           Applied to the whole column so the title and meta stay aligned
+           with the body. -->
+      <article class="lg:col-8 mx-auto max-w-[46rem]">
         {
           image && (
             <div class="mb-10">
@@ -38,7 +42,9 @@ const { title, description, author, categories, image, date, tags } = post.data;
           )
         }
         <h1 set:html={markdownify(title)} class="h2 mb-4" />
-        <ul class="mb-4">
+        <ul
+          class="text-text-light dark:text-darkmode-text-light mb-10 text-sm [&_a:hover]:underline [&_a:hover]:underline-offset-2"
+        >
           <li class="mr-4 inline-block">
             <a href={`/authors/${slugify(author)}`}>
               <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
