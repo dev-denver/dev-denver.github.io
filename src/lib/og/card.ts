@@ -19,8 +19,12 @@ export interface OgCard {
   meta: string;
 }
 
-/** satori accepts plain objects, so no JSX runtime is needed here. */
-const box = (style: Record<string, unknown>, children: unknown) => ({
+/**
+ * satori accepts plain `{type, props}` objects, so no JSX runtime is needed —
+ * but its signature is typed as `ReactNode`, which a bare object literal does
+ * not satisfy. Returning `any` keeps the call sites readable.
+ */
+const box = (style: Record<string, unknown>, children: unknown): any => ({
   type: "div",
   props: { style, children },
 });
