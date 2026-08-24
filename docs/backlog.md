@@ -21,7 +21,9 @@ claude -c        # 직전 세션 이어받기
 6. `gh pr create` — 제목은 Conventional Commits + 한국어 (기존 히스토리 컨벤션)
 7. `gh pr checks --watch` — **PR Checks 통과가 머지 조건.** 저장소에 브랜치 보호 규칙이 없으므로 이 확인을 생략하지 않는다
 8. `gh pr merge --squash --delete-branch`
-9. 이 파일의 해당 항목 체크 → 다음 항목
+9. 다음 항목으로
+
+**이 파일의 체크박스는 해당 작업 PR 안에서 함께 갱신한다** — 별도 PR을 만들지 않는다. 즉 PR *N*의 커밋에는 PR *N-1* 항목의 체크가 함께 들어간다.
 
 ### 지켜야 할 제약
 
@@ -56,9 +58,10 @@ claude -c        # 직전 세션 이어받기
 
 ## Phase 1 — 시각 디자인 기반
 
-- [ ] **PR 1 · 무채색 상태 체계**
-      링크는 밑줄 + `text_dark`. `.sidebar-link.active`를 배경 칩 + 굵기로 (현재 `#121212` vs `#040404`라 대비가 거의 0). 전역 포커스 외곽선 2px.
-      필요한 회색 단계만 `src/config/theme.json`에 보강하고 `scripts/themeGenerator.js` 확장. 라이트/다크 모두 대비 확인.
+- [x] **PR 1 · 무채색 상태 체계** — #8
+      사이드바 hover/활성 칩 + 굵기 + inset 레일, `aria-current`, 본문 링크 밑줄,
+      전역 `:focus-visible` 외곽선, 다크모드 `text_light` 위계 분리(`#B4AFB6` → `#9A959F`).
+      함께 고친 버그: 인라인 코드가 라이트 모드에서 흰 글자로 보이지 않던 문제, 검색 버튼 hover 무반응.
 - [ ] **PR 2 · 한국어 타이포그래피**
       본문 `line-height`/`letter-spacing`/측정폭(65~75자) 조정, `--text-h1`~`h6` 스케일 재조정,
       `src/styles/components.css`의 `.content` prose 규칙(150~171행) 정리.
