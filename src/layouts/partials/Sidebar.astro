@@ -1,9 +1,11 @@
 ---
 import Logo from "@/components/Logo.astro";
+import Social from "@/components/Social.astro";
 import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import categoriesConfig from "@/config/categories.json";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
+import social from "@/config/social.json";
 import { getAllTaxonomy } from "@/lib/taxonomyParser.astro";
 import { slugify } from "@/lib/utils/textConverter";
 import { IoSearch } from "react-icons/io5";
@@ -32,11 +34,19 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
 <div class="mobile-topbar">
   <Logo />
   <label for="sidebar-toggle" class="cursor-pointer" aria-label="메뉴 열기">
-    <svg id="sidebar-show-icon" class="h-6 fill-current block" viewBox="0 0 20 20">
+    <svg
+      id="sidebar-show-icon"
+      class="h-6 fill-current block"
+      viewBox="0 0 20 20"
+    >
       <title>Menu Open</title>
       <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
     </svg>
-    <svg id="sidebar-hide-icon" class="h-6 fill-current hidden" viewBox="0 0 20 20">
+    <svg
+      id="sidebar-hide-icon"
+      class="h-6 fill-current hidden"
+      viewBox="0 0 20 20"
+    >
       <title>Menu Close</title>
       <polygon
         points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
@@ -50,8 +60,7 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
   for="sidebar-toggle"
   id="sidebar-overlay"
   class="hidden fixed inset-0 z-40 bg-black/50 lg:hidden"
-  aria-hidden="true"
-></label>
+  aria-hidden="true"></label>
 
 <aside id="sidebar" class="sidebar">
   <div class="mb-8 hidden lg:block">
@@ -79,7 +88,9 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
   </nav>
 
   <div class="mb-8">
-    <h5 class="mb-4 text-sm font-semibold uppercase text-text-light dark:text-darkmode-text-light">
+    <h5
+      class="mb-4 text-sm font-semibold uppercase text-text-light dark:text-darkmode-text-light"
+    >
       Categories
     </h5>
     <ul class="space-y-1">
@@ -96,32 +107,35 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     </ul>
   </div>
 
-  <div class="mt-auto flex items-center gap-5 pt-6">
-    {
-      settings.search && (
-        <button
-          class="text-text-dark hover:text-primary dark:text-white dark:hover:text-darkmode-primary text-xl"
-          aria-label="search"
-          data-search-trigger
-        >
-          <IoSearch />
-        </button>
-      )
-    }
-    <ThemeSwitcher />
-    {
-      navigation_button.enable && (
-        <a
-          class="btn btn-outline-primary btn-sm"
-          href={navigation_button.link}
-          target={
-            navigation_button.link.startsWith("http") ? "_blank" : "_self"
-          }
-          rel={navigation_button.link.startsWith("http") ? "noopener" : ""}
-        >
-          {navigation_button.label}
-        </a>
-      )
-    }
+  <div class="mt-auto pt-6">
+    <Social source={social.main} className="social-icons mb-5" />
+    <div class="flex items-center gap-5">
+      {
+        settings.search && (
+          <button
+            class="text-text-dark hover:text-primary dark:text-white dark:hover:text-darkmode-primary text-xl"
+            aria-label="search"
+            data-search-trigger
+          >
+            <IoSearch />
+          </button>
+        )
+      }
+      <ThemeSwitcher />
+      {
+        navigation_button.enable && (
+          <a
+            class="btn btn-outline-primary btn-sm"
+            href={navigation_button.link}
+            target={
+              navigation_button.link.startsWith("http") ? "_blank" : "_self"
+            }
+            rel={navigation_button.link.startsWith("http") ? "noopener" : ""}
+          >
+            {navigation_button.label}
+          </a>
+        )
+      }
+    </div>
   </div>
 </aside>

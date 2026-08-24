@@ -57,14 +57,6 @@ const pagesCollection = defineCollection({
   }),
 });
 
-// about collection schema
-const aboutCollection = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/about" }),
-  schema: z.object({
-    ...commonFields,
-  }),
-});
-
 // contact collection schema
 const contactCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/contact" }),
@@ -79,6 +71,5 @@ export const collections = {
   blog: blogCollection,
   authors: authorsCollection,
   pages: pagesCollection,
-  about: aboutCollection,
   contact: contactCollection,
 };

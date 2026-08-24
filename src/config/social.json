@@ -4,6 +4,16 @@
       "name": "github",
       "icon": "FaGithub",
       "link": "https://github.com/dev-denver"
+    },
+    {
+      "name": "resume",
+      "icon": "FaFileLines",
+      "link": "https://my.surfit.io/w/966385452"
+    },
+    {
+      "name": "instagram",
+      "icon": "FaInstagram",
+      "link": "https://www.instagram.com/dud._.rim/"
     }
   ]
 }
