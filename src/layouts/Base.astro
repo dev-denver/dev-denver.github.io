@@ -42,7 +42,7 @@ const { title, meta_title, description, image, noindex, canonical } =
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <!-- google tag manager -->
     {
@@ -164,6 +164,12 @@ const { title, meta_title, description, image, noindex, canonical } =
         <GoogleTagmanagerNoscript id={config.google_tag_manager.gtm_id} />
       )
     }
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-white dark:focus:bg-darkmode-primary dark:focus:text-text-dark"
+    >
+      본문 바로가기
+    </a>
     <Announcement client:only="react" />
     <div class="flex flex-1 flex-col lg:flex-row">
       <Sidebar />
