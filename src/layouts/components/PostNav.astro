@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  previous?: CollectionEntry<"blog">;
+  next?: CollectionEntry<"blog">;
+}
+
+const { previous, next } = Astro.props;
+
+// "이전 글" means older here, matching the reverse-chronological list order.
+const links = [
+  { post: previous, label: "이전 글", align: "text-left" },
+  { post: next, label: "다음 글", align: "text-right" },
+].filter(
+  (
+    link,
+  ): link is { post: CollectionEntry<"blog">; label: string; align: string } =>
+    Boolean(link.post),
+);
+---
+
+{
+  links.length > 0 && (
+    <nav
+      class="border-border dark:border-darkmode-border mt-16 grid gap-4 border-t pt-8 sm:grid-cols-2"
+      aria-label="이전 및 다음 글"
+    >
+      {links.map(({ post, label, align }) => (
+        <a
+          href={`/blog/${post.id}`}
+          class:list={[
+            "post-nav-link",
+            align,
+            // A lone "다음 글" belongs on the right, where it would sit if
+            // both links were present.
+            links.length === 1 && label === "다음 글" && "sm:col-start-2",
+          ]}
+        >
+          <span class="post-nav-label">{label}</span>
+          <span class="post-nav-title">{post.data.title}</span>
+        </a>
+      ))}
+    </nav>
+  )
+}
