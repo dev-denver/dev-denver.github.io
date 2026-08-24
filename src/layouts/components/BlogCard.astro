@@ -1,8 +1,8 @@
 ---
 import config from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
+import readingTime from "@/lib/utils/readingTime";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
-import { FaRegFolder, FaRegUserCircle } from "react-icons/fa";
 import ImageMod from "./ImageMod.astro";
 
 const {
@@ -10,49 +10,69 @@ const {
   blog_folder,
 }: { summary_length: number; blog_folder: string } = config.settings;
 const { data } = Astro.props;
-const { title, image, date, author, categories } = data.data;
+const { title, image, date, categories, tags } = data.data;
+
+const href = `/${blog_folder}/${data.id}`;
+
+// Render to plain text before trimming. Slicing the raw markdown first could
+// cut through a fence or a link and leave the syntax visible in the excerpt.
+const plain = plainify(data.body ?? "").trim();
+const excerpt =
+  plain.length > summary_length
+    ? `${plain.slice(0, summary_length).trimEnd()}…`
+    : plain;
+
+// The author is the same person on every post, so it earns no room in a list.
+const meta = [
+  categories?.length ? humanize(categories[0]) : null,
+  date ? dateFormat(date) : null,
+  readingTime(data.body ?? ""),
+].filter(Boolean);
 ---
 
-<div class="bg-body dark:bg-darkmode-body">
+<article class="flex gap-6">
+  <div class="min-w-0 flex-1">
+    <h3 class="text-h4 mb-2">
+      <a class="hover:underline hover:underline-offset-4" href={href}>
+        {title}
+      </a>
+    </h3>
+
+    <p class="text-text-light dark:text-darkmode-text-light mb-3 text-sm">
+      {meta.join(" · ")}
+    </p>
+
+    {excerpt && <p class="text-text dark:text-darkmode-text mb-3">{excerpt}</p>}
+
+    {
+      /* Tags render as written. humanize() would turn "github-pages" into
+        "Github pages", which is not what the tag says. */
+    }
+    {
+      tags?.length > 0 && (
+        <ul class="flex flex-wrap gap-2">
+          {tags.map((tag: string) => (
+            <li>
+              <a class="tag-chip" href={`/tags/${slugify(tag)}`}>
+                {tag}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+
   {
     image && (
       <ImageMod
-        class="mb-6 w-full rounded"
+        class="hidden h-28 w-40 shrink-0 rounded object-cover sm:block"
         src={image}
         alt={title}
-        width={445}
-        height={230}
+        width={320}
+        height={224}
         format="webp"
       />
     )
   }
-  <h3 class="mb-3 text-h4">
-    <a href={`/${blog_folder}/${data.id}`}>
-      {title}
-    </a>
-  </h3>
-  <ul class="mb-4">
-    <li class="mr-4 inline-block">
-      <a href={`/authors/${slugify(author)}`}>
-        <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
-        {author}
-      </a>
-    </li>
-    <li class="mr-4 inline-block">
-      <FaRegFolder className={"mr-2 -mt-1 inline-block"} />
-      {
-        categories.map((category: string, index: number) => (
-          <a href={`/categories/${slugify(category)}`}>
-            {humanize(category)}
-            {index !== categories.length - 1 && ","}
-          </a>
-        ))
-      }
-    </li>
-    {date && <li class="inline-block">{dateFormat(date)}</li>}
-  </ul>
-  <p class="mb-6">{plainify(data.body?.slice(0, Number(summary_length)))}</p>
-  <a class="btn btn-outline-primary btn-sm" href={`/${blog_folder}/${data.id}`}>
-    더 보기
-  </a>
-</div>
+</article>
