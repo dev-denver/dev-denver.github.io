@@ -152,5 +152,23 @@ claude -c        # 직전 세션 이어받기
       같은 "denver.log"만 반복했다), `menu.footer` 채우기, 404에 글 목록 링크 추가.
       함께 고침: 브레드크럼이 영문 "Home"이었고, 홈에서 자기 자신을 가리키는 항목 하나만
       렌더했으며, `aria-current` 대신 `aria-label="page"`를 써서 접근 이름에 "page"가 들어갔다.
-- [ ] **PR 15 · 최종 점검**
-      대비·포커스·랜드마크·Lighthouse 확인, `PRODUCT.md` 갱신.
+- [x] **PR 15 · 최종 점검** — #23
+      빌드 산출물 감사: 중복 id 0, alt 없는 이미지 0, 사이트맵에 OG PNG·404 미포함 확인.
+      고침: `.tag-chip`/`.code-block-lang`의 12px 글씨가 `bg-light` 위에서 4.51:1로
+      여유가 없어 `text-text`(8.4:1)로 상향, 사이드바 `<aside>`에 접근 이름 부여,
+      TOC 레일의 `<aside>`를 `div`로 (이름 없는 complementary 랜드마크 중복 제거).
+      `PRODUCT.md`를 현재 상태로 갱신.
+
+      > Lighthouse 실측은 하지 못했다 — 이 환경에 브라우저가 없다. 정적 감사와
+      > 대비 계산으로 대체했으므로, 실제 점수는 사용자가 확인해야 한다.
+
+---
+
+## 남은 것 / 다음에 볼 만한 것
+
+- 빈 카테고리 3개(`언어/CS 기초`, `프론트엔드`, `백엔드/인프라`)가 사이트맵에 들어간다.
+  글이 쌓이면 자연히 해소되지만, 그전까지는 얇은 페이지다.
+- 숏코드(`Accordion`/`Button`/`Notice`/`Tab`/`Video`/`Youtube`)는 아직 어떤 글에서도 쓰이지 않는다.
+- `astro check`가 `markdown.remarkPlugins ... deprecated` 경고를 낸다. 설정은 이미
+  `unified({...})`로 넘기고 있어 오탐으로 보이나 확인 필요.
+- Lighthouse 실측, 실제 브라우저에서 라이트/다크 × 데스크톱/모바일 육안 확인.

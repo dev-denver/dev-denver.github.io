@@ -20,8 +20,10 @@
   @apply bg-light dark:bg-darkmode-light border-border dark:border-darkmode-border flex items-center justify-between gap-4 border-b px-4 py-2;
 }
 
+/* Same reason as .tag-chip: 12px text on the bg-light header needs more than
+   text-light's 4.51:1. */
 .code-block-lang {
-  @apply text-text-light dark:text-darkmode-text-light font-mono text-xs tracking-wide uppercase;
+  @apply text-text dark:text-darkmode-text font-mono text-xs tracking-wide uppercase;
 }
 
 .code-block-copy {
