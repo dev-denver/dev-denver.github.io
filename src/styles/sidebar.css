@@ -25,6 +25,15 @@
   @apply text-text-light dark:text-darkmode-text-light text-sm tabular-nums;
 }
 
+.search-trigger {
+  @apply border-border dark:border-darkmode-border text-text-light dark:text-darkmode-text-light mb-8 flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm transition;
+  @apply hover:bg-light hover:text-text-dark dark:hover:bg-darkmode-light dark:hover:text-darkmode-text-dark;
+}
+
+.search-trigger-kbd {
+  @apply bg-light dark:bg-darkmode-light rounded px-1.5 py-0.5 font-mono text-xs;
+}
+
 .mobile-topbar {
   @apply bg-body dark:bg-darkmode-body border-border dark:border-darkmode-border sticky top-0 z-40 flex items-center justify-between border-b px-4 py-3 lg:hidden;
 }
