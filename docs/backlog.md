@@ -62,9 +62,10 @@ claude -c        # 직전 세션 이어받기
       사이드바 hover/활성 칩 + 굵기 + inset 레일, `aria-current`, 본문 링크 밑줄,
       전역 `:focus-visible` 외곽선, 다크모드 `text_light` 위계 분리(`#B4AFB6` → `#9A959F`).
       함께 고친 버그: 인라인 코드가 라이트 모드에서 흰 글자로 보이지 않던 문제, 검색 버튼 hover 무반응.
-- [ ] **PR 2 · 한국어 타이포그래피**
-      본문 `line-height`/`letter-spacing`/측정폭(65~75자) 조정, `--text-h1`~`h6` 스케일 재조정,
-      `src/styles/components.css`의 `.content` prose 규칙(150~171행) 정리.
+- [x] **PR 2 · 한국어 타이포그래피** — #10
+      `word-break: keep-all`(한국어 줄바꿈), 본문 측정폭 46rem, 헤딩 크기를 rem 토큰에서
+      em 기반으로 전환(모바일 루트가 0.8배라 rem 헤딩이 본문 크기로 수렴하던 문제),
+      헤딩 여백·줄간격 조정, h2 하단 헤어라인, 인용구 톤다운, 포스트 메타 위계 정리.
 - [ ] **PR 3 · 죽은 코드 정리 + 문의 페이지 제거**
       `src/pages/contact.astro`·`src/content/contact/`·`menu.json` 문의 항목 삭제 (`action="#"`로 조용히 실패하던 폼).
       `navigation.css`의 삭제된 헤더 잔재, `safe.css`의 `#nav-toggle`,

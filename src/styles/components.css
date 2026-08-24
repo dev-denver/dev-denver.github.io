@@ -150,11 +150,15 @@
 .content {
   @apply [&>*:first-child]:mt-0 [&>*:first-child]:pt-0;
   @apply prose max-w-none;
-  @apply prose-headings:mb-[.3em] prose-headings:mt-[.6em] prose-headings:text-text-dark dark:prose-headings:text-darkmode-text-dark;
-  @apply prose-h1:text-h1-sm md:prose-h1:text-h1;
-  @apply prose-h2:text-h2-sm md:prose-h2:text-h2;
-  @apply prose-h3:text-h3-sm md:prose-h3:text-h3;
-  @apply prose-p:text-base prose-p:text-text dark:prose-p:text-darkmode-text;
+  /* Heading sizes are em-based, not the rem `--text-h*` tokens: the root font
+     size is 0.8x on mobile, so rem-sized headings collapsed toward body size
+     there. em keeps the ratio to body text identical at every breakpoint.
+     They also no longer reach `--text-h2` (39.8px), which tied a section
+     heading with the post title. */
+  @apply prose-headings:mt-[1.8em] prose-headings:mb-[0.7em] prose-headings:text-text-dark dark:prose-headings:text-darkmode-text-dark;
+  @apply prose-h1:text-[1.9em] prose-h2:text-[1.55em] prose-h3:text-[1.28em] prose-h4:text-[1.1em];
+  @apply prose-h2:border-b prose-h2:border-border dark:prose-h2:border-darkmode-border prose-h2:pb-[0.4em];
+  @apply prose-p:text-base prose-p:leading-[1.85] prose-p:text-text dark:prose-p:text-darkmode-text;
   @apply prose-a:text-text-dark dark:prose-a:text-darkmode-text-dark prose-a:font-medium;
   @apply prose-a:underline prose-a:decoration-1 prose-a:underline-offset-[3px] prose-a:decoration-text-light dark:prose-a:decoration-darkmode-text-light;
   @apply prose-a:hover:decoration-current prose-a:hover:decoration-2;
@@ -163,8 +167,10 @@
   @apply prose-strong:text-text-dark dark:prose-strong:text-darkmode-text;
   @apply prose-hr:border-border dark:prose-hr:border-darkmode-border;
   @apply prose-pre:rounded-lg prose-pre:bg-light dark:prose-pre:bg-darkmode-light;
-  @apply prose-li:text-text dark:prose-li:text-darkmode-text;
-  @apply prose-blockquote:rounded-lg prose-blockquote:border prose-blockquote:border-l-[10px] prose-blockquote:border-primary prose-blockquote:bg-light prose-blockquote:px-8 prose-blockquote:py-10 prose-blockquote:font-secondary prose-blockquote:text-2xl prose-blockquote:not-italic prose-blockquote:text-text-dark dark:prose-blockquote:border-darkmode-primary dark:prose-blockquote:bg-darkmode-light dark:prose-blockquote:text-darkmode-text-light;
+  @apply prose-li:text-text prose-li:leading-[1.85] prose-li:my-[0.4em] dark:prose-li:text-darkmode-text;
+  /* Was a 10px rule with 2xl text and 40px padding — it shouted louder than the
+     body it was quoting. A quiet rule and body-sized text fit a reading log. */
+  @apply prose-blockquote:rounded-r prose-blockquote:border-0 prose-blockquote:border-l-4 prose-blockquote:border-border prose-blockquote:bg-light prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:text-base prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:text-text dark:prose-blockquote:border-darkmode-border dark:prose-blockquote:bg-darkmode-light dark:prose-blockquote:text-darkmode-text;
   @apply prose-table:relative prose-table:overflow-hidden prose-table:rounded-lg prose-table:before:absolute prose-table:before:left-0 prose-table:before:top-0 prose-table:before:h-full prose-table:before:w-full prose-table:before:rounded-[inherit] prose-table:before:border prose-table:before:border-border prose-table:before:content-[""] dark:prose-table:before:border-darkmode-border;
   @apply prose-thead:border-border prose-thead:bg-light dark:prose-thead:border-darkmode-border dark:prose-thead:bg-darkmode-light;
   @apply prose-th:relative prose-th:z-10 prose-th:px-4 prose-th:py-[18px] prose-th:text-text-dark dark:prose-th:text-darkmode-text;
