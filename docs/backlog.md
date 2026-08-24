@@ -66,11 +66,13 @@ claude -c        # 직전 세션 이어받기
       `word-break: keep-all`(한국어 줄바꿈), 본문 측정폭 46rem, 헤딩 크기를 rem 토큰에서
       em 기반으로 전환(모바일 루트가 0.8배라 rem 헤딩이 본문 크기로 수렴하던 문제),
       헤딩 여백·줄간격 조정, h2 하단 헤어라인, 인용구 톤다운, 포스트 메타 위계 정리.
-- [ ] **PR 3 · 죽은 코드 정리 + 문의 페이지 제거**
-      `src/pages/contact.astro`·`src/content/contact/`·`menu.json` 문의 항목 삭제 (`action="#"`로 조용히 실패하던 폼).
-      `navigation.css`의 삭제된 헤더 잔재, `safe.css`의 `#nav-toggle`,
-      미사용 `src/hooks/useTheme.ts`·`src/lib/utils/bgImageMod.ts`·`src/types/index.d.ts`·`src/pages/[regular].astro`,
-      미사용 의존성(`astro-swiper`, `@justinribeiro/lite-youtube`, `prop-types`, 설정 없는 `eslint`), `settings.sticky_header`.
+- [x] **PR 3 · 죽은 코드 정리 + 문의 페이지 제거** — #11
+      문의 페이지·콘텐츠·내비 항목·`contact` 컬렉션·`contact_form_action` 삭제.
+      `navigation.css` 삭제(살아있는 `.navbar-brand`/`.theme-switcher`는 `components.css`로 이동),
+      `safe.css`의 `#nav-toggle`·swiper 규칙, `useTheme.ts`·`bgImageMod.ts`·`types/index.d.ts`·`sortByWeight`,
+      `[regular].astro` + `pages` 컬렉션(빈 컬렉션이라 매 빌드 경고를 냈다), `settings.sticky_header`.
+      의존성은 `astro-swiper`·`prop-types`·`eslint` 제거 — **`@justinribeiro/lite-youtube`는 유지**
+      (`src/layouts/shortcodes/Youtube.tsx`가 실제로 import 한다).
 
 ## Phase 2 — 읽기 경험
 
