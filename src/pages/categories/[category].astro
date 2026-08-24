@@ -1,7 +1,7 @@
 ---
-import BlogCard from "@/components/BlogCard.astro";
 import categoriesConfig from "@/config/categories.json";
 import Base from "@/layouts/Base.astro";
+import PostGrid from "@/components/PostGrid.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
@@ -52,13 +52,7 @@ const sortedPosts = sortByDate(filterByCategories);
             아직 글이 없습니다.
           </p>
         ) : (
-          <div class="row">
-            {sortedPosts.map((post) => (
-              <div class="mb-14 md:col-6 lg:col-4">
-                <BlogCard data={post} />
-              </div>
-            ))}
-          </div>
+          <PostGrid posts={sortedPosts} />
         )
       }
     </div>

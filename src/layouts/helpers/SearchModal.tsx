@@ -131,16 +131,16 @@ const SearchModal = () => {
             htmlFor="searchInput"
             className="absolute left-7 top-[calc(50%-7px)]"
           >
-            <span className="sr-only">search icon</span>
+            <span className="sr-only">검색 아이콘</span>
             {searchString ? (
               <svg
                 onClick={() => setSearchString("")}
                 viewBox="0 0 512 512"
                 height="18"
                 width="18"
-                className="hover:text-red-500 cursor-pointer -mt-0.5"
+                className="hover:text-red-500 cursor-pointer -m-2.5 p-2.5"
               >
-                <title>close icon</title>
+                <title>검색어 지우기</title>
                 <path
                   fill="currentcolor"
                   d="M256 512A256 256 0 10256 0a256 256 0 100 512zM175 175c9.4-9.4 24.6-9.4 33.9.0l47 47 47-47c9.4-9.4 24.6-9.4 33.9.0s9.4 24.6.0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6.0 33.9s-24.6 9.4-33.9.0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9.0s-9.4-24.6.0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6.0-33.9z"
@@ -153,7 +153,7 @@ const SearchModal = () => {
                 width="18"
                 className="-mt-0.5"
               >
-                <title>search icon</title>
+                <title>검색</title>
                 <path
                   fill="currentcolor"
                   d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8.0 45.3s-32.8 12.5-45.3.0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9.0 208S93.1.0 208 0 416 93.1 416 208zM208 352a144 144 0 100-288 144 144 0 100 288z"
@@ -163,7 +163,7 @@ const SearchModal = () => {
           </label>
           <input
             id="searchInput"
-            placeholder="Search..."
+            placeholder="검색어를 입력하세요..."
             className="search-wrapper-header-input"
             type="input"
             name="search"
@@ -195,7 +195,7 @@ const SearchModal = () => {
                 <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 001.506.0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 00-.753 1.659z"></path>
               </svg>
             </kbd>
-            to navigate
+            이동
           </span>
           <span className="flex items-center">
             <kbd>
@@ -211,16 +211,16 @@ const SearchModal = () => {
                 ></path>
               </svg>
             </kbd>
-            to select
+            선택
           </span>
           {searchString && (
             <span>
-              <strong>{searchResult.length} </strong> results - in{" "}
-              <strong>{totalTime} </strong> seconds
+              <strong>{totalTime}</strong>초 만에 결과{" "}
+              <strong>{searchResult.length}</strong>개
             </span>
           )}
           <span>
-            <kbd>ESC</kbd> to close
+            <kbd>ESC</kbd> 닫기
           </span>
         </div>
       </div>

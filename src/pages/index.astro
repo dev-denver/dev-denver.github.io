@@ -1,7 +1,7 @@
 ---
-import BlogCard from "@/components/BlogCard.astro";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
+import PostGrid from "@/components/PostGrid.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import PageHeader from "@/partials/PageHeader.astro";
@@ -24,13 +24,7 @@ const recentPosts = sortedPosts.slice(0, HOME_POST_LIMIT);
             아직 글이 없습니다.
           </p>
         ) : (
-          <div class="row">
-            {recentPosts.map((post) => (
-              <div class="mb-14 md:col-6 lg:col-4">
-                <BlogCard data={post} />
-              </div>
-            ))}
-          </div>
+          <PostGrid posts={recentPosts} />
         )
       }
       {

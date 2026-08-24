@@ -1,6 +1,6 @@
 ---
-import BlogCard from "@/components/BlogCard.astro";
 import Base from "@/layouts/Base.astro";
+import PostGrid from "@/components/PostGrid.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
@@ -31,15 +31,7 @@ const sortedPosts = sortByDate(filterByTags);
   <PageHeader title={tag} />
   <div class="section-sm pb-0">
     <div class="container">
-      <div class="row">
-        {
-          sortedPosts.map((post) => (
-            <div class="mb-14 md:col-6 lg:col-4">
-              <BlogCard data={post} />
-            </div>
-          ))
-        }
-      </div>
+      <PostGrid posts={sortedPosts} />
     </div>
   </div>
 </Base>

@@ -1,6 +1,6 @@
 ---
-import BlogCard from "@/components/BlogCard.astro";
 import ImageMod from "@/components/ImageMod.astro";
+import PostGrid from "@/components/PostGrid.astro";
 import Social from "@/components/Social.astro";
 import Base from "@/layouts/Base.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
@@ -65,14 +65,8 @@ const postFilterByAuthor = posts.filter(
         </div>
       </div>
 
-      <div class="row justify-center pb-16 pt-14">
-        {
-          postFilterByAuthor.map((post) => (
-            <div class="mb-12 md:col-6 lg:col-4">
-              <BlogCard data={post} />
-            </div>
-          ))
-        }
+      <div class="pb-16 pt-14">
+        <PostGrid posts={postFilterByAuthor} />
       </div>
     </div>
   </section>

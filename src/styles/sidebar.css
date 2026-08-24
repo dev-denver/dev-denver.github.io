@@ -4,15 +4,15 @@
 }
 
 .sidebar-link {
-  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary rounded p-2 font-semibold transition;
+  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary focus-visible:outline-primary dark:focus-visible:outline-darkmode-primary rounded p-2 font-semibold outline-offset-2 transition;
 }
 
 .sidebar-link.active {
-  @apply text-primary dark:text-darkmode-primary;
+  @apply text-primary dark:text-darkmode-primary bg-primary/10 dark:bg-darkmode-primary/10;
 }
 
 .sidebar-category-link {
-  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary flex items-center justify-between rounded p-2 transition;
+  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary focus-visible:outline-primary dark:focus-visible:outline-darkmode-primary flex items-center justify-between rounded p-2 outline-offset-2 transition;
 }
 
 .mobile-topbar {

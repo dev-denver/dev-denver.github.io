@@ -25,49 +25,71 @@ if (!buildDrafts && contactIndex.data.draft) {
     <div class="container">
       <div class="row">
         <div class="mx-auto md:col-10 lg:col-6">
-          <form action={contact_form_action} method="POST">
+          <form id="contact-form" action={contact_form_action} method="POST">
             <div class="mb-6">
               <label for="name" class="form-label">
-                Full Name <span class="text-red-500">*</span>
+                이름 <span class="text-red-500">*</span>
               </label>
               <input
                 id="name"
                 name="name"
                 class="form-input"
-                placeholder="John Doe"
+                placeholder="홍길동"
                 type="text"
                 required
               />
             </div>
             <div class="mb-6">
               <label for="email" class="form-label">
-                Working Mail <span class="text-red-500">*</span>
+                이메일 <span class="text-red-500">*</span>
               </label>
               <input
                 id="email"
                 name="email"
                 class="form-input"
-                placeholder="john.doe@email.com"
+                placeholder="example@email.com"
                 type="email"
                 required
               />
             </div>
             <div class="mb-6">
               <label for="message" class="form-label">
-                Anything else? <span class="text-red-500">*</span>
+                하고 싶은 말 <span class="text-red-500">*</span>
               </label>
               <textarea
                 id="message"
                 name="message"
                 class="form-input"
-                placeholder="Message goes here..."
+                placeholder="내용을 입력해주세요..."
                 required
                 rows="8"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">보내기</button>
+            <p
+              id="contact-form-status"
+              class="mt-4 hidden text-sm"
+              role="status"
+              aria-live="polite"
+            >
+            </p>
           </form>
         </div>
       </div>
     </div>
   </section>
 </Base>
+
+<script is:inline define:vars={{ contact_form_action }}>
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("contact-form-status");
+
+  if (form && status && !contact_form_action.startsWith("http")) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      status.textContent =
+        "아직 폼 전송이 연결되어 있지 않아요. github.com/dev-denver 로 남겨주시면 확인할게요.";
+      status.classList.remove("hidden");
+      status.classList.add("text-red-500");
+    });
+  }
+</script>

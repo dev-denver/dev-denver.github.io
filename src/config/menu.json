@@ -1,19 +1,19 @@
 {
   "main": [
     {
-      "name": "Home",
+      "name": "홈",
       "url": "/"
     },
     {
-      "name": "Blog",
+      "name": "블로그",
       "url": "/blog"
     },
     {
-      "name": "Tags",
+      "name": "태그",
       "url": "/tags"
     },
     {
-      "name": "Contact",
+      "name": "문의",
       "url": "/contact"
     }
   ],

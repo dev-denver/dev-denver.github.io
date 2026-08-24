@@ -1,6 +1,6 @@
 ---
-import BlogCard from "@/components/BlogCard.astro";
 import Pagination from "@/components/Pagination.astro";
+import PostGrid from "@/components/PostGrid.astro";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import { getListPage, getSinglePage } from "@/lib/contentParser.astro";
@@ -29,15 +29,7 @@ const currentPosts = sortedPosts.slice(0, config.settings.pagination);
   <PageHeader title={postIndex?.data.title} />
   <div class="section-sm pb-0">
     <div class="container">
-      <div class="row">
-        {
-          currentPosts.map((post) => (
-            <div class="mb-14 md:col-6 lg:col-4">
-              <BlogCard data={post} />
-            </div>
-          ))
-        }
-      </div>
+      <PostGrid posts={currentPosts} />
       <div class="pb-14">
         <Pagination
           section={BLOG_FOLDER}
