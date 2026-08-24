@@ -1,0 +1,43 @@
+.toc-summary {
+  @apply text-text-light dark:text-darkmode-text-light cursor-pointer text-sm font-semibold tracking-wide uppercase;
+}
+
+.toc-list {
+  @apply mt-3 space-y-1 border-l;
+  @apply border-border dark:border-darkmode-border;
+}
+
+.toc-link {
+  /* Monochrome palette: the active entry is marked by weight and a rail
+     segment, not a color, so the resting state has to stay clearly quieter. */
+  @apply text-text dark:text-darkmode-text block py-1 pl-3 text-sm leading-snug transition;
+  @apply hover:text-text-dark dark:hover:text-darkmode-text-dark;
+  @apply -ml-px border-l-2 border-transparent;
+}
+
+.toc-depth-3 .toc-link {
+  @apply pl-6;
+}
+
+.toc-link[aria-current="location"] {
+  @apply text-text-dark dark:text-darkmode-text-dark font-semibold;
+  @apply border-text-dark dark:border-darkmode-text-dark;
+}
+
+/* Sticky rail (xl and up) */
+.toc-rail {
+  @apply sticky top-8 max-h-[calc(100vh-6rem)] overflow-y-auto;
+}
+
+/* Collapsible block inside the article (below xl) */
+.toc-inline {
+  @apply border-border dark:border-darkmode-border mb-10 rounded-lg border px-4 py-3;
+}
+
+.toc-inline .toc-summary::after {
+  content: " 펼치기";
+}
+
+.toc-inline .toc-details[open] .toc-summary::after {
+  content: " 접기";
+}

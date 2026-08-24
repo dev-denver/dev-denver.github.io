@@ -1,6 +1,8 @@
 ---
 import BlogCard from "@/components/BlogCard.astro";
 import Share from "@/components/Share.astro";
+import Toc from "@/components/Toc.astro";
+import TocScrollSpy from "@/components/TocScrollSpy.astro";
 import Giscus from "@/helpers/Giscus.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import dateFormat from "@/lib/utils/dateFormat";
@@ -15,7 +17,7 @@ const { post } = Astro.props;
 
 const posts = await getSinglePage(COLLECTION_FOLDER);
 const similarPosts = similarItems(post, posts);
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const { title, description, author, categories, image, date, tags } = post.data;
 ---
 
@@ -67,6 +69,7 @@ const { title, description, author, categories, image, date, tags } = post.data;
             {dateFormat(date)}
           </li>
         </ul>
+        <Toc headings={headings} variant="inline" class="xl:hidden" />
         <div class="content mb-10">
           <Content />
         </div>
@@ -100,7 +103,12 @@ const { title, description, author, categories, image, date, tags } = post.data;
         </div>
         <Giscus className="mt-20" />
       </article>
+
+      <aside class="xl:col-3 hidden xl:block">
+        <Toc headings={headings} variant="rail" />
+      </aside>
     </div>
+    <TocScrollSpy />
 
     <!-- Related posts -->
     <div class="section pb-0">

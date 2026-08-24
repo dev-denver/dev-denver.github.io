@@ -1,0 +1,47 @@
+---
+// Table of contents built from the headings `render()` returns, so it stays in
+// sync with the post without the author writing anything.
+//
+// Rendered twice per post: a sticky rail on xl screens and a collapsible block
+// inside the article below that. Only one is ever displayed, so only one is in
+// the accessibility tree.
+
+export interface TocHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: TocHeading[];
+  variant?: "rail" | "inline";
+  class?: string;
+}
+
+const { headings, variant = "rail", class: className = "" } = Astro.props;
+
+// h2/h3 only — deeper levels make the list longer than it is useful.
+const items = headings.filter(({ depth }) => depth === 2 || depth === 3);
+
+// A single-entry contents list tells the reader nothing.
+const show = items.length > 1;
+---
+
+{
+  show && (
+    <nav class:list={["toc", `toc-${variant}`, className]} aria-label="목차">
+      <details class="toc-details" open={variant === "rail"}>
+        <summary class="toc-summary">목차</summary>
+        <ul class="toc-list">
+          {items.map(({ depth, slug, text }) => (
+            <li class:list={["toc-item", `toc-depth-${depth}`]}>
+              <a class="toc-link" href={`#${slug}`} data-toc-link={slug}>
+                {text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </nav>
+  )
+}
