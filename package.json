@@ -25,6 +25,7 @@
     "@astrojs/sitemap": "3.7.3",
     "@digi4care/astro-google-tagmanager": "^2.0.0",
     "@justinribeiro/lite-youtube": "^1.9.0",
+    "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.2.4",
     "astro-auto-import": "^0.5.2",
     "date-fns": "^4.4.0",
@@ -34,6 +35,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
+    "satori": "^0.33.4",
     "sharp": "^0.35.3",
     "vite": "^8.1.5"
   },
