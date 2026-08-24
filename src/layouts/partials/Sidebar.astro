@@ -33,13 +33,17 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
 <!-- mobile top bar -->
 <div class="mobile-topbar">
   <Logo />
-  <label for="sidebar-toggle" class="cursor-pointer" aria-label="메뉴 열기">
+  <label
+    for="sidebar-toggle"
+    class="cursor-pointer -m-2.5 p-2.5"
+    aria-label="메뉴 열기"
+  >
     <svg
       id="sidebar-show-icon"
       class="h-6 fill-current block"
       viewBox="0 0 20 20"
     >
-      <title>Menu Open</title>
+      <title>메뉴 열기</title>
       <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
     </svg>
     <svg
@@ -47,7 +51,7 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
       class="h-6 fill-current hidden"
       viewBox="0 0 20 20"
     >
-      <title>Menu Close</title>
+      <title>메뉴 닫기</title>
       <polygon
         points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
         transform="rotate(45 10 10)"></polygon>
@@ -91,18 +95,30 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     <h5
       class="mb-4 text-sm font-semibold uppercase text-text-light dark:text-darkmode-text-light"
     >
-      Categories
+      카테고리
     </h5>
     <ul class="space-y-1">
       {
-        categoryItems.map(({ label, slug, count }) => (
-          <li>
-            <a href={`/categories/${slug}`} class="sidebar-category-link">
-              <span>{label}</span>
-              <span>({count})</span>
-            </a>
-          </li>
-        ))
+        categoryItems.map(({ label, slug, count }) =>
+          count > 0 ? (
+            <li>
+              <a href={`/categories/${slug}`} class="sidebar-category-link">
+                <span>{label}</span>
+                <span>({count})</span>
+              </a>
+            </li>
+          ) : (
+            <li>
+              <span
+                class="sidebar-category-link pointer-events-none opacity-50"
+                aria-disabled="true"
+              >
+                <span>{label}</span>
+                <span>({count})</span>
+              </span>
+            </li>
+          ),
+        )
       }
     </ul>
   </div>
@@ -113,8 +129,8 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
       {
         settings.search && (
           <button
-            class="text-text-dark hover:text-primary dark:text-white dark:hover:text-darkmode-primary text-xl"
-            aria-label="search"
+            class="text-text-dark hover:text-primary dark:text-white dark:hover:text-darkmode-primary -m-2.5 p-2.5 text-xl"
+            aria-label="검색"
             data-search-trigger
           >
             <IoSearch />

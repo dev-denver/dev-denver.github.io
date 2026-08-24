@@ -26,16 +26,16 @@ const { title, image, date, author, categories } = data.data;
       />
     )
   }
-  <h4 class="mb-3">
+  <h3 class="mb-3 text-h4">
     <a href={`/${blog_folder}/${data.id}`}>
       {title}
     </a>
-  </h4>
+  </h3>
   <ul class="mb-4">
     <li class="mr-4 inline-block">
       <a href={`/authors/${slugify(author)}`}>
         <FaRegUserCircle className={"mr-2 -mt-1 inline-block"} />
-        {humanize(author)}
+        {author}
       </a>
     </li>
     <li class="mr-4 inline-block">
@@ -53,6 +53,6 @@ const { title, image, date, author, categories } = data.data;
   </ul>
   <p class="mb-6">{plainify(data.body?.slice(0, Number(summary_length)))}</p>
   <a class="btn btn-outline-primary btn-sm" href={`/${blog_folder}/${data.id}`}>
-    read more
+    더 보기
   </a>
 </div>

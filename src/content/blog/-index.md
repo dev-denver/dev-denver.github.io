@@ -1,7 +1,7 @@
 ---
-title: "Blog Posts"
+title: "블로그"
 meta_title: ""
-description: "this is meta description"
+description: "denver의 개발 학습 기록 모음"
 image: ""
 draft: false
 ---

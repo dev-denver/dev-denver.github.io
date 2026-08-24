@@ -245,13 +245,14 @@ const SearchResult = ({
                 ></path>
               </svg>
               <p className="mt-4">
-                No results for &quot;<strong>{searchString}</strong>&quot;
+                &quot;<strong>{searchString}</strong>&quot;에 대한 검색 결과가
+                없습니다
               </p>
             </div>
           )}
         </div>
       ) : (
-        <div className="py-8 text-center">Type something to search...</div>
+        <div className="py-8 text-center">검색어를 입력해주세요...</div>
       )}
     </div>
   );
