@@ -11,10 +11,6 @@
     {
       "name": "태그",
       "url": "/tags"
-    },
-    {
-      "name": "문의",
-      "url": "/contact"
     }
   ],
   "footer": []
