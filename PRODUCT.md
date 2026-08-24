@@ -22,14 +22,22 @@ denver 개인의 개발 학습 기록(TIL 성격)을 정리하고 공유하는 �
 
 - Astro + Tailwind CSS 기반 정적 사이트, GitHub Pages에 배포 (`main` 브랜치 push 시 자동 빌드).
 - 글은 `src/content/blog/`에 Markdown/MDX로 작성.
-- 브랜딩, 내비게이션, 소셜 링크는 `src/config/*.json`에서 관리.
+- 브랜딩, 태그라인, 내비게이션, 소셜 링크는 `src/config/*.json`에서 관리.
 - giscus(GitHub Discussions 기반) 댓글 사용, 언어는 한국어(`lang: "ko"`).
-- 홈 히어로에 이력서 링크("이력서 보기")와 GitHub/Instagram 소셜 링크 노출.
+- 좌측 사이드바로 탐색 (주요 메뉴, 카테고리, 검색, 테마 전환, 이력서 링크).
+- 읽기 보조: 목차(스크롤 스파이), 읽는 시간, 이전/다음 글, 헤딩 앵커, 코드블록 복사.
+- 공유·구독: `/rss.xml` 피드, 글별 OG 이미지 빌드 타임 생성, `BlogPosting` JSON-LD.
+- 팔레트는 무채색을 유지한다. 상태 구분은 색이 아니라 밑줄·배경 칩·굵기·외곽선으로 한다
+  (자세한 규칙은 `docs/backlog.md`).
 
 ## Capabilities and Constraints
 
 - 한국어 콘텐츠/UI 유지가 기본이다.
 - GitHub Pages 정적 호스팅이라는 제약이 있다 (서버사이드 로직 불가, 빌드 타임 생성만 가능).
+- OG 이미지 생성은 빌드 시 Google Fonts에서 한글 서브셋을 받아온다. 실패하면 공용
+  이미지로 대체되고 빌드는 계속된다.
+- 연락 수단은 giscus 댓글과 GitHub/Instagram 링크다. 정적 호스팅이라 동작하는 문의 폼을
+  둘 수 없어 해당 페이지는 제거했다.
 - 이 외 추가로 지켜야 할 제약은 아직 명시된 바 없음 — 필요 시 사용자에게 재확인.
 
 ## Product Principles

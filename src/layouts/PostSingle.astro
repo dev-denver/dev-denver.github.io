@@ -128,9 +128,14 @@ const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
         <Giscus className="mt-20" />
       </article>
 
-      <aside class="xl:col-3 hidden xl:block">
+      {
+        /* A plain div, not <aside>: the <nav> inside already carries the
+          landmark and its name. An <aside> here would add a second, unnamed
+          complementary landmark next to the sidebar's. */
+      }
+      <div class="xl:col-3 hidden xl:block">
         <Toc headings={headings} variant="rail" />
-      </aside>
+      </div>
     </div>
     <TocScrollSpy />
     <HeadingAnchors />
