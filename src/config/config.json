@@ -44,10 +44,16 @@
     "gtm_id": "GTM-XXXXXX"
   },
 
-  "disqus": {
-    "enable": false,
-    "shortname": "",
-    "settings": {}
+  "giscus": {
+    "enable": true,
+    "repo": "dev-denver/dev-denver.github.io",
+    "repo_id": "R_kgDOUBkfag",
+    "category": "Announcements",
+    "category_id": "DIC_kwDOUBkfas4DEE0y",
+    "mapping": "pathname",
+    "reactions_enabled": true,
+    "input_position": "top",
+    "lang": "ko"
   },
 
   "metadata": {

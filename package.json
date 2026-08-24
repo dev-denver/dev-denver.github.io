@@ -27,7 +27,6 @@
     "astro-auto-import": "^0.5.2",
     "astro-swiper": "^2.8.1",
     "date-fns": "^4.4.0",
-    "disqus-react": "^1.1.7",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
     "marked": "^18.0.7",
