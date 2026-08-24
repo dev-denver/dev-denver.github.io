@@ -31,15 +31,23 @@ export const titleify = (content: string) => {
     .join(" ");
 };
 
+// Tags that end a line of prose. Stripping them without a separator glued
+// neighbouring blocks together — a post excerpt read "정리해본다. 스택Astro — ..."
+// because </h2> sat directly against the next list item.
+const BLOCK_END =
+  /<\/(p|h[1-6]|li|ul|ol|blockquote|pre|div|section|article|tr|td|th|figcaption)>|<br\s*\/?>/gi;
+
 // plainify
 export const plainify = (content: string) => {
   const parseMarkdown: any = marked.parse(content);
-  const filterBrackets = parseMarkdown.replace(/<\/?[^>]+(>|$)/gm, "");
-  const filterSpaces = filterBrackets.replace(/[\r\n]\s*[\r\n]/gm, "");
-  const stripHTML = htmlEntityDecoder(filterSpaces);
-  // marked always appends a newline. Left in, it ended up inside <title>,
-  // og:title, and the JSON-LD payload.
-  return stripHTML.trim();
+  const withBoundaries = parseMarkdown.replace(BLOCK_END, " ");
+  // Inline tags (<em>, <code>, <a>) are dropped without a separator so words
+  // are not split apart.
+  const filterBrackets = withBoundaries.replace(/<\/?[^>]+(>|$)/gm, "");
+  const stripHTML = htmlEntityDecoder(filterBrackets);
+  // marked always appends a newline, and the substitutions above leave runs of
+  // whitespace. Left in, they ended up inside <title>, og:title, and JSON-LD.
+  return stripHTML.replace(/\s+/g, " ").trim();
 };
 
 // strip entities for plainify
