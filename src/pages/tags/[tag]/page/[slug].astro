@@ -2,12 +2,18 @@
 import PostListPage from "@/layouts/PostListPage.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
+import { extraPageParams, pageFromParam } from "@/lib/utils/paginate";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 
 export async function getStaticPaths() {
+  const posts = await getSinglePage("blog");
   const tags = await getTaxonomy("blog", "tags");
-  return tags.map((tag) => ({ params: { tag } }));
+
+  return tags.flatMap((tag) => {
+    const count = taxonomyFilter(posts, "tags", tag).length;
+    return extraPageParams(count).map((slug) => ({ params: { tag, slug } }));
+  });
 }
 
 const { tag } = Astro.params;
@@ -21,6 +27,5 @@ const sortedPosts = sortByDate(taxonomyFilter(posts, "tags", tag!));
   description={`${tag} 태그가 붙은 글 목록`}
   posts={sortedPosts}
   section={`tags/${tag}`}
-  currentPage={1}
-  emptyMessage="이 태그에 해당하는 글이 아직 없습니다."
+  currentPage={pageFromParam(Astro.params.slug)}
 />

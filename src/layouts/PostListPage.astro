@@ -1,0 +1,70 @@
+---
+// Shared shell for every page that lists posts — blog index, tag, category.
+// Keeps the header, empty state, and pagination identical across all of them
+// instead of each route re-implementing its own.
+
+import Pagination from "@/components/Pagination.astro";
+import PostGrid from "@/components/PostGrid.astro";
+import Base from "@/layouts/Base.astro";
+import { pageSlice, totalPageCount } from "@/lib/utils/paginate";
+import PageHeader from "@/partials/PageHeader.astro";
+
+interface Props {
+  title: string;
+  posts: any[];
+  /** Path prefix for pagination links, without slashes — e.g. "tags/astro". */
+  section: string;
+  currentPage?: number;
+  humanizeTitle?: boolean;
+  meta_title?: string;
+  description?: string;
+  image?: string;
+  emptyMessage?: string;
+}
+
+const {
+  title,
+  posts,
+  section,
+  currentPage = 1,
+  humanizeTitle = true,
+  meta_title,
+  description,
+  image,
+  emptyMessage = "아직 글이 없습니다.",
+} = Astro.props;
+
+const totalPages = totalPageCount(posts.length);
+const currentPosts = pageSlice(posts, currentPage);
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <PageHeader title={title} humanizeTitle={humanizeTitle} />
+  <div class="section-sm pb-0">
+    <div class="container">
+      {
+        posts.length === 0 ? (
+          <p class="text-text-light dark:text-darkmode-text-light pb-14 text-center">
+            {emptyMessage}
+          </p>
+        ) : (
+          <>
+            <PostGrid posts={currentPosts} />
+            <div class="pb-14">
+              <Pagination
+                section={section}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
+            </div>
+          </>
+        )
+      }
+    </div>
+  </div>
+</Base>

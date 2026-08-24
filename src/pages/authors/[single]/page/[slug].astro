@@ -1,0 +1,26 @@
+---
+import AuthorPage from "@/layouts/AuthorPage.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { extraPageParams, pageFromParam } from "@/lib/utils/paginate";
+import { slugify } from "@/lib/utils/textConverter";
+
+export async function getStaticPaths() {
+  const authors = await getSinglePage("authors");
+  const posts = await getSinglePage("blog");
+
+  return authors.flatMap((author) => {
+    const count = posts.filter(
+      (post) => slugify(post.data.author) === slugify(author.data.title),
+    ).length;
+
+    return extraPageParams(count).map((slug) => ({
+      params: { single: author.id, slug },
+      props: { author },
+    }));
+  });
+}
+
+const { author } = Astro.props;
+---
+
+<AuthorPage author={author} currentPage={pageFromParam(Astro.params.slug)} />

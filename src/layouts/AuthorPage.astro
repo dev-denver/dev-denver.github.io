@@ -1,0 +1,87 @@
+---
+// Author profile plus that author's posts. Shared by /authors/[single] and its
+// paginated pages so the profile block is written once.
+
+import ImageMod from "@/components/ImageMod.astro";
+import Pagination from "@/components/Pagination.astro";
+import PostGrid from "@/components/PostGrid.astro";
+import Social from "@/components/Social.astro";
+import Base from "@/layouts/Base.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { pageSlice, totalPageCount } from "@/lib/utils/paginate";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import { slugify } from "@/lib/utils/textConverter";
+import { render } from "astro:content";
+
+interface Props {
+  author: any;
+  currentPage?: number;
+}
+
+const { author, currentPage = 1 } = Astro.props;
+const { title, social, meta_title, description, image } = author.data;
+const { Content } = await render(author);
+
+const posts = await getSinglePage("blog");
+// Was rendered unsorted — the author's posts came out in glob order.
+const authorPosts = sortByDate(
+  posts.filter((post) => slugify(post.data.author) === slugify(title)),
+);
+
+const totalPages = totalPageCount(authorPosts.length);
+const currentPosts = pageSlice(authorPosts, currentPage);
+---
+
+<Base
+  title={title}
+  meta_title={meta_title}
+  description={description}
+  image={image}
+>
+  <section class="section-sm pb-0">
+    <div class="container">
+      <div
+        class="border-border dark:border-darkmode-border row justify-center border-b pb-14"
+      >
+        <div class="text-center lg:col-4">
+          {
+            image && (
+              <ImageMod
+                src={image}
+                class="mx-auto mb-10 rounded"
+                height={200}
+                width={200}
+                alt={title}
+                format="webp"
+              />
+            )
+          }
+          <h1 class="h3 mb-6">{title}</h1>
+          <div class="content">
+            <Content />
+          </div>
+          <Social source={social} className="social-icons" />
+        </div>
+      </div>
+
+      <div class="pt-14 pb-16">
+        {
+          authorPosts.length === 0 ? (
+            <p class="text-text-light dark:text-darkmode-text-light text-center">
+              아직 작성한 글이 없습니다.
+            </p>
+          ) : (
+            <>
+              <PostGrid posts={currentPosts} />
+              <Pagination
+                section={`authors/${author.id}`}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
+            </>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Base>
