@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/styles/components.css"
+        ],
+        "createdAt": "2026-08-24T17:05:46.049Z",
+        "reason": "Claude: blockquote left rule, not a card side-tab — standard typographic convention for block quotations, and it uses the neutral --color-border token, not an accent (palette is deliberately monochrome). This line reduced it from border-l-[10px]+border-primary to border-l-4+border-border."
+      }
+    ]
+  }
+}

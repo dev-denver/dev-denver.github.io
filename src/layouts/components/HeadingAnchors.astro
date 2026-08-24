@@ -1,0 +1,31 @@
+---
+// Adds a permalink control to each content heading.
+//
+// Done client-side rather than in a rehype plugin because user rehype plugins
+// run before Astro assigns heading ids — at build time there is no id to link
+// to yet. By the time this runs the ids are in the DOM.
+---
+
+<script>
+  function addHeadingAnchors() {
+    document
+      .querySelectorAll<HTMLElement>(
+        ".content :is(h2, h3, h4)[id]:not([data-anchored])",
+      )
+      .forEach((heading) => {
+        heading.dataset.anchored = "true";
+
+        const anchor = document.createElement("a");
+        anchor.className = "heading-anchor";
+        anchor.href = `#${heading.id}`;
+        anchor.textContent = "#";
+        // The "#" is decoration; the label carries the meaning.
+        anchor.setAttribute("aria-label", `${heading.textContent} 섹션 링크`);
+
+        heading.appendChild(anchor);
+      });
+  }
+
+  addHeadingAnchors();
+  document.addEventListener("astro:page-load", addHeadingAnchors);
+</script>

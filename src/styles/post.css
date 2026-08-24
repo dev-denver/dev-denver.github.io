@@ -1,0 +1,32 @@
+/* Heading permalinks: hidden until the heading is hovered or the link itself
+   is focused, so they never compete with the heading text. Always reachable by
+   keyboard — `sr-only` would remove them from the tab order on touch too. */
+.heading-anchor {
+  @apply text-text-light dark:text-darkmode-text-light ml-2 no-underline opacity-0 transition-opacity;
+}
+
+:is(h2, h3, h4):hover > .heading-anchor,
+.heading-anchor:focus-visible {
+  @apply opacity-100;
+}
+
+/* Touch devices have no hover, so keep the anchors visible there. */
+@media (hover: none) {
+  .heading-anchor {
+    @apply opacity-100;
+  }
+}
+
+/* Previous / next post */
+.post-nav-link {
+  @apply border-border dark:border-darkmode-border flex flex-col gap-1 rounded-lg border p-4 no-underline transition;
+  @apply hover:bg-light dark:hover:bg-darkmode-light;
+}
+
+.post-nav-label {
+  @apply text-text-light dark:text-darkmode-text-light text-xs font-semibold tracking-wide uppercase;
+}
+
+.post-nav-title {
+  @apply text-text-dark dark:text-darkmode-text-dark font-semibold;
+}

@@ -88,8 +88,12 @@ claude -c        # 직전 세션 이어받기
       `render()`가 주는 headings로 빌드 타임 생성. xl 이상은 sticky 레일,
       그 아래는 article 안 접이식 `<details>`. IntersectionObserver 스크롤 스파이.
       컴포넌트 TOC가 대체하므로 `remark-toc`·`remark-collapse` 제거.
-- [ ] **PR 6 · 본문 부가 정보**
-      미사용 `src/lib/utils/readingTime.ts` 한국어화 후 연결("N분 읽기"), 이전/다음 글 내비게이션, 헤딩 앵커 링크.
+- [x] **PR 6 · 본문 부가 정보** — #14
+      `readingTime.ts`를 한국어 기준으로 재작성(한글 음절/라틴 단어/코드 줄을 각각 계산) 후 연결,
+      이전/다음 글 내비게이션, 헤딩 앵커 링크.
+
+      > 헤딩 앵커는 rehype가 아니라 클라이언트 스크립트다. 사용자 rehype 플러그인은
+      > Astro가 헤딩 `id`를 붙이기 **전에** 실행되어 빌드 타임에는 링크할 id가 없다.
 - [ ] **PR 7 · 헤딩 계층/접근성**
       사이드바 `h5` → 페이지 `h1` 역전 해소, 포스트 카드 제목 레벨 정리.
 
