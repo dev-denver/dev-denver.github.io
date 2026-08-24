@@ -1,3 +1,4 @@
+import escapeRegExp from "@/lib/utils/escapeRegExp";
 import { plainify, titleify } from "@/lib/utils/textConverter";
 import React from "react";
 
@@ -33,9 +34,11 @@ export interface ISearchGroup {
 const SearchResult = ({
   searchResult,
   searchString,
+  selectedIndex = -1,
 }: {
   searchResult: ISearchItem[];
   searchString: string;
+  selectedIndex?: number;
 }) => {
   // generate search result group
   const generateSearchGroup = (searchResult: ISearchItem[]) => {
@@ -73,7 +76,7 @@ const SearchResult = ({
 
   // match marker
   const matchMarker = (text: string, substring: string) => {
-    const parts = text.split(new RegExp(`(${substring})`, "gi"));
+    const parts = text.split(new RegExp(`(${escapeRegExp(substring)})`, "gi"));
     return parts.map((part, index) =>
       part.toLowerCase() === substring.toLowerCase() ? (
         <mark key={index}>{part}</mark>
@@ -85,7 +88,7 @@ const SearchResult = ({
 
   // match underline
   const matchUnderline = (text: string, substring: string) => {
-    const parts = text?.split(new RegExp(`(${substring})`, "gi"));
+    const parts = text?.split(new RegExp(`(${escapeRegExp(substring)})`, "gi"));
     return parts?.map((part, index) =>
       part.toLowerCase() === substring.toLowerCase() ? (
         <span key={index} className="underline">
@@ -137,89 +140,102 @@ const SearchResult = ({
                   {titleify(result.group)}
                 </p>
 
-                {result.groupItems.map((item) => (
-                  <div
-                    key={item.slug}
-                    id="searchItem"
-                    className="search-result-item"
-                  >
-                    {item.frontmatter.image && (
-                      <div className="search-result-item-image">
-                        <img
-                          src={item.frontmatter.image}
-                          alt={item.frontmatter.title}
-                        />
-                      </div>
-                    )}
-                    <div className="search-result-item-body">
-                      <a
-                        href={`/${item.slug}`}
-                        className="search-result-item-title search-result-item-link"
-                      >
-                        {matchUnderline(item.frontmatter.title, searchString)}
-                      </a>
-                      {item.frontmatter.description && (
-                        <p className="search-result-item-description">
-                          {matchUnderline(
-                            item.frontmatter.description,
-                            searchString,
-                          )}
-                        </p>
+                {result.groupItems.map((item) => {
+                  // Flat position across all groups, so it lines up with the
+                  // keyboard selection index the modal owns.
+                  const flatIndex = searchResult.findIndex(
+                    (candidate) => candidate.slug === item.slug,
+                  );
+                  return (
+                    <div
+                      key={item.slug}
+                      data-search-index={flatIndex}
+                      className={`search-result-item${
+                        flatIndex === selectedIndex
+                          ? " search-result-item-active"
+                          : ""
+                      }`}
+                    >
+                      {item.frontmatter.image && (
+                        <div className="search-result-item-image">
+                          <img
+                            src={item.frontmatter.image}
+                            alt={item.frontmatter.title}
+                          />
+                        </div>
                       )}
-                      {item.content && (
-                        <p className="search-result-item-content">
-                          {matchContent(item.content, searchString)}
-                        </p>
-                      )}
-                      <div className="search-result-item-taxonomies">
-                        {item.frontmatter.categories && (
-                          <div className="mr-2">
-                            <svg
-                              width="14"
-                              height="14"
-                              fill="currentColor"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M11 0H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2 2 2 0 0 0 2-2V4a2 2 0 0 0-2-2 2 2 0 0 0-2-2zm2 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1V3zM2 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2z"></path>
-                            </svg>
-                            {item.frontmatter.categories.map(
-                              (category, index) => (
-                                <span key={category}>
-                                  {matchUnderline(category, searchString)}
-                                  {item.frontmatter.categories &&
-                                    index !==
-                                      item.frontmatter.categories.length -
-                                        1 && <>, </>}
-                                </span>
-                              ),
+                      <div className="search-result-item-body">
+                        <a
+                          href={`/${item.slug}`}
+                          className="search-result-item-title search-result-item-link"
+                        >
+                          {matchUnderline(item.frontmatter.title, searchString)}
+                        </a>
+                        {item.frontmatter.description && (
+                          <p className="search-result-item-description">
+                            {matchUnderline(
+                              item.frontmatter.description,
+                              searchString,
                             )}
-                          </div>
+                          </p>
                         )}
-                        {item.frontmatter.tags && (
-                          <div className="mr-2">
-                            <svg
-                              width="14"
-                              height="14"
-                              fill="currentColor"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z"></path>
-                              <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z"></path>
-                            </svg>
-                            {item.frontmatter.tags.map((tag, index) => (
-                              <span key={tag}>
-                                {matchUnderline(tag, searchString)}
-                                {item.frontmatter.tags &&
-                                  index !==
-                                    item.frontmatter.tags.length - 1 && <>, </>}
-                              </span>
-                            ))}
-                          </div>
+                        {item.content && (
+                          <p className="search-result-item-content">
+                            {matchContent(item.content, searchString)}
+                          </p>
                         )}
+                        <div className="search-result-item-taxonomies">
+                          {item.frontmatter.categories && (
+                            <div className="mr-2">
+                              <svg
+                                width="14"
+                                height="14"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M11 0H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2 2 2 0 0 0 2-2V4a2 2 0 0 0-2-2 2 2 0 0 0-2-2zm2 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1V3zM2 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2z"></path>
+                              </svg>
+                              {item.frontmatter.categories.map(
+                                (category, index) => (
+                                  <span key={category}>
+                                    {matchUnderline(category, searchString)}
+                                    {item.frontmatter.categories &&
+                                      index !==
+                                        item.frontmatter.categories.length -
+                                          1 && <>, </>}
+                                  </span>
+                                ),
+                              )}
+                            </div>
+                          )}
+                          {item.frontmatter.tags && (
+                            <div className="mr-2">
+                              <svg
+                                width="14"
+                                height="14"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z"></path>
+                                <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z"></path>
+                              </svg>
+                              {item.frontmatter.tags.map((tag, index) => (
+                                <span key={tag}>
+                                  {matchUnderline(tag, searchString)}
+                                  {item.frontmatter.tags &&
+                                    index !==
+                                      item.frontmatter.tags.length - 1 && (
+                                      <>, </>
+                                    )}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ))
           ) : (

@@ -136,20 +136,28 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     </ul>
   </nav>
 
+  {
+    /* Search was a bare icon at the bottom of the sidebar with no label and no
+      hint that ⌘K opens it. A labelled control with the shortcut spelled out
+      is the only thing that makes it discoverable. */
+  }
+  {
+    settings.search && (
+      <button class="search-trigger" data-search-trigger>
+        <span class="flex items-center gap-2">
+          <IoSearch />
+          검색
+        </span>
+        <kbd class="search-trigger-kbd" data-search-shortcut>
+          Ctrl K
+        </kbd>
+      </button>
+    )
+  }
+
   <div class="mt-auto pt-6">
     <Social source={social.main} className="social-icons mb-5" />
     <div class="flex items-center gap-5">
-      {
-        settings.search && (
-          <button
-            class="text-text dark:text-darkmode-text hover:bg-light hover:text-text-dark dark:hover:bg-darkmode-light dark:hover:text-darkmode-text-dark rounded p-2.5 text-xl transition"
-            aria-label="검색"
-            data-search-trigger
-          >
-            <IoSearch />
-          </button>
-        )
-      }
       <ThemeSwitcher />
       {
         navigation_button.enable && (
@@ -168,3 +176,17 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     </div>
   </div>
 </aside>
+
+<script>
+  // The shortcut is ⌘K on macOS and Ctrl+K elsewhere. Rendered as "Ctrl K" so
+  // the non-Mac majority needs no correction, then swapped on Apple platforms.
+  function labelSearchShortcut() {
+    if (!/Mac|iPhone|iPad/.test(navigator.platform)) return;
+    document
+      .querySelectorAll("[data-search-shortcut]")
+      .forEach((element) => (element.textContent = "⌘ K"));
+  }
+
+  labelSearchShortcut();
+  document.addEventListener("astro:page-load", labelSearchShortcut);
+</script>
