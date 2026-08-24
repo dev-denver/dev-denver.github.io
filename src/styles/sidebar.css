@@ -3,16 +3,26 @@
   @apply lg:sticky lg:z-30 lg:translate-x-0 lg:shrink-0;
 }
 
-.sidebar-link {
-  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary focus-visible:outline-primary dark:focus-visible:outline-darkmode-primary rounded p-2 font-semibold outline-offset-2 transition;
-}
-
-.sidebar-link.active {
-  @apply text-primary dark:text-darkmode-primary bg-primary/10 dark:bg-darkmode-primary/10;
+/* Nav state without color: resting links sit at body-text weight and tone,
+   hover adds a surface chip, active adds chip + bold + an inset rail. */
+.sidebar-link,
+.sidebar-category-link {
+  @apply text-text dark:text-darkmode-text rounded p-2 font-medium transition;
+  @apply hover:bg-light hover:text-text-dark dark:hover:bg-darkmode-light dark:hover:text-darkmode-text-dark;
 }
 
 .sidebar-category-link {
-  @apply text-text-dark hover:text-primary dark:text-darkmode-text-dark dark:hover:text-darkmode-primary focus-visible:outline-primary dark:focus-visible:outline-darkmode-primary flex items-center justify-between rounded p-2 outline-offset-2 transition;
+  @apply flex items-center justify-between gap-2;
+}
+
+.sidebar-link.active,
+.sidebar-category-link.active {
+  @apply bg-light dark:bg-darkmode-light text-text-dark dark:text-darkmode-text-dark font-bold;
+  @apply shadow-[inset_2px_0_0_0_currentColor];
+}
+
+.sidebar-category-count {
+  @apply text-text-light dark:text-darkmode-text-light text-sm tabular-nums;
 }
 
 .mobile-topbar {

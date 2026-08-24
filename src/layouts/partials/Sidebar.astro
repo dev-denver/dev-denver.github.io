@@ -74,19 +74,20 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
   <nav class="mb-8">
     <ul class="space-y-1">
       {
-        main.map((item) => (
-          <li>
-            <a
-              href={item.url}
-              class={`sidebar-link block ${
-                (pathname === `${item.url}/` || pathname === item.url) &&
-                "active"
-              }`}
-            >
-              {item.name}
-            </a>
-          </li>
-        ))
+        main.map((item) => {
+          const isActive = pathname === `${item.url}/` || pathname === item.url;
+          return (
+            <li>
+              <a
+                href={item.url}
+                class={`sidebar-link block ${isActive ? "active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.name}
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
   </nav>
@@ -99,12 +100,18 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     </h5>
     <ul class="space-y-1">
       {
-        categoryItems.map(({ label, slug, count }) =>
-          count > 0 ? (
+        categoryItems.map(({ label, slug, count }) => {
+          const url = `/categories/${slug}`;
+          const isActive = pathname === url || pathname === `${url}/`;
+          return count > 0 ? (
             <li>
-              <a href={`/categories/${slug}`} class="sidebar-category-link">
+              <a
+                href={url}
+                class={`sidebar-category-link ${isActive ? "active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+              >
                 <span>{label}</span>
-                <span>({count})</span>
+                <span class="sidebar-category-count">{count}</span>
               </a>
             </li>
           ) : (
@@ -114,11 +121,11 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
                 aria-disabled="true"
               >
                 <span>{label}</span>
-                <span>({count})</span>
+                <span class="sidebar-category-count">{count}</span>
               </span>
             </li>
-          ),
-        )
+          );
+        })
       }
     </ul>
   </div>
@@ -129,7 +136,7 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
       {
         settings.search && (
           <button
-            class="text-text-dark hover:text-primary dark:text-white dark:hover:text-darkmode-primary -m-2.5 p-2.5 text-xl"
+            class="text-text dark:text-darkmode-text hover:bg-light hover:text-text-dark dark:hover:bg-darkmode-light dark:hover:text-darkmode-text-dark rounded p-2.5 text-xl transition"
             aria-label="검색"
             data-search-trigger
           >
