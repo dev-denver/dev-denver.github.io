@@ -5,8 +5,6 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
-import remarkCollapse from "remark-collapse";
-import remarkToc from "remark-toc";
 import sharp from "sharp";
 import config from "./src/config/config.json";
 import rehypeCodeBlocks from "./src/lib/rehype/rehypeCodeBlocks.mjs";
@@ -38,10 +36,6 @@ export default defineConfig({
 
   markdown: {
     processor: unified({
-      remarkPlugins: [
-        remarkToc,
-        [remarkCollapse, { test: "Table of contents" }],
-      ],
       rehypePlugins: [rehypeCodeBlocks],
     }),
     // Dual themes so code blocks follow the site theme. one-dark-pro was a

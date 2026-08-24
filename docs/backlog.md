@@ -84,8 +84,10 @@ claude -c        # 직전 세션 이어받기
       > rehype·remark 플러그인)을 바꾸면 로컬에서 `rm -rf .astro` 후 빌드해야 한다.
       > Astro가 렌더된 콘텐츠를 `.astro/`에 캐시해서, 캐시가 있으면 플러그인이
       > 아예 호출되지 않는다. CI는 매번 새로 체크아웃하므로 영향 없다.
-- [ ] **PR 5 · 목차(TOC)**
-      포스트 헤딩에서 빌드 타임 목차 생성 + 데스크톱 고정/모바일 접이식, 스크롤 스파이.
+- [x] **PR 5 · 목차(TOC)** — #13
+      `render()`가 주는 headings로 빌드 타임 생성. xl 이상은 sticky 레일,
+      그 아래는 article 안 접이식 `<details>`. IntersectionObserver 스크롤 스파이.
+      컴포넌트 TOC가 대체하므로 `remark-toc`·`remark-collapse` 제거.
 - [ ] **PR 6 · 본문 부가 정보**
       미사용 `src/lib/utils/readingTime.ts` 한국어화 후 연결("N분 읽기"), 이전/다음 글 내비게이션, 헤딩 앵커 링크.
 - [ ] **PR 7 · 헤딩 계층/접근성**

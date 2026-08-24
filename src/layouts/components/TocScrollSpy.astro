@@ -1,0 +1,66 @@
+---
+// Marks the table-of-contents entry for the section currently being read.
+// Re-initialised on astro:page-load because ClientRouter swaps the document.
+---
+
+<script>
+  let observer: IntersectionObserver | null = null;
+
+  function setupTocScrollSpy() {
+    observer?.disconnect();
+    observer = null;
+
+    const links =
+      document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]");
+    if (links.length === 0) return;
+
+    // The TOC is rendered twice (rail + inline), so the same heading is
+    // reachable from two links — dedupe before observing.
+    const headings = [
+      ...new Set(Array.from(links, (link) => link.dataset.tocLink ?? "")),
+    ]
+      .map((id) => document.getElementById(id))
+      .filter((heading): heading is HTMLElement => heading !== null);
+    if (headings.length === 0) return;
+
+    // Tracked separately from the observer callback: entries only report the
+    // headings that just changed, not everything currently on screen.
+    const visible = new Set<string>();
+
+    const markCurrent = () => {
+      // The heading closest to the top of the document wins, so scrolling up
+      // through a section reselects that section rather than the one below it.
+      const current = headings.find((heading) => visible.has(heading.id));
+      const activeId = current?.id ?? null;
+
+      links.forEach((link) => {
+        if (activeId && link.dataset.tocLink === activeId) {
+          link.setAttribute("aria-current", "location");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visible.add(entry.target.id);
+          } else {
+            visible.delete(entry.target.id);
+          }
+        });
+        markCurrent();
+      },
+      // Only the top slice of the viewport counts as "being read", so the
+      // active entry tracks the heading you have just scrolled past.
+      { rootMargin: "0px 0px -70% 0px", threshold: 0 },
+    );
+
+    headings.forEach((heading) => observer?.observe(heading));
+  }
+
+  setupTocScrollSpy();
+  document.addEventListener("astro:page-load", setupTocScrollSpy);
+</script>
