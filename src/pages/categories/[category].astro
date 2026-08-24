@@ -17,7 +17,9 @@ export async function getStaticPaths() {
   const fixedCategorySlugs = categoriesConfig.list.map(({ label }) =>
     slugify(label),
   );
-  const categories = [...new Set([...categoriesFromPosts, ...fixedCategorySlugs])];
+  const categories = [
+    ...new Set([...categoriesFromPosts, ...fixedCategorySlugs]),
+  ];
 
   return categories.map((category) => {
     return {

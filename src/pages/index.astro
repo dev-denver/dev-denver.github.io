@@ -14,10 +14,7 @@ const sortedPosts = sortByDate(posts);
 const recentPosts = sortedPosts.slice(0, HOME_POST_LIMIT);
 ---
 
-<Base
-  title={config.site.title}
-  description={config.metadata.meta_description}
->
+<Base title={config.site.title} description={config.metadata.meta_description}>
   <PageHeader title={config.site.title} humanizeTitle={false} />
   <div class="section-sm pb-0">
     <div class="container">

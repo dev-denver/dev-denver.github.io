@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "format": "prettier -w ./src",
+    "format:check": "prettier -c ./src",
     "generate-json": "node scripts/jsonGenerator.js",
     "generate-llms": "node scripts/llmsGenerator.js",
     "remove-darkmode": "node scripts/removeDarkmode.js && npm run format"

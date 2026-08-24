@@ -71,9 +71,7 @@ const Announcement: React.FC = () => {
 
   return (
     <div className="relative z-999 bg-body dark:bg-darkmode-body shadow-[1px_0_10px_7px_rgba(154,154,154,0.11)] px-4 py-4 pr-12 md:text-lg transition-all duration-300 w-full">
-      <p
-        dangerouslySetInnerHTML={{ __html: markdownify(content) }}
-      />
+      <p dangerouslySetInnerHTML={{ __html: markdownify(content) }} />
       <button
         onClick={handleClose}
         className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer flex items-center justify-center w-7 h-7 border border-border dark:border-darkmode-border rounded-full text-xl transition-colors duration-200"
