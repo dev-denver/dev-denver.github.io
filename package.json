@@ -21,6 +21,7 @@
     "@astrojs/markdown-remark": "^7.2.1",
     "@astrojs/mdx": "^7.0.7",
     "@astrojs/react": "6.0.1",
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "3.7.3",
     "@digi4care/astro-google-tagmanager": "^2.0.0",
     "@justinribeiro/lite-youtube": "^1.9.0",

@@ -125,8 +125,12 @@ claude -c        # 직전 세션 이어받기
 
 ## Phase 4 — 공유 · SEO
 
-- [ ] **PR 11 · RSS**
-      `@astrojs/rss`로 `/rss.xml` 생성, `<link rel="alternate">`, 사이드바/푸터 링크.
+- [x] **PR 11 · RSS** — #19
+      `@astrojs/rss`로 `/rss.xml` 생성, `<link rel="alternate">` 자동 검색, 푸터 링크.
+
+      > `astro.config`가 `trailingSlash: "never"`이므로 `rss()`에도 `trailingSlash: false`를
+      > 넘겨야 한다. 기본값은 슬래시를 붙여서 피드 링크가 실제 URL과 어긋난다.
+      > 엔드포인트가 `.ts`라 `contentParser.astro`의 초안/미래글 필터를 쓸 수 없어 같은 규칙을 재구현했다.
 - [ ] **PR 12 · 메타데이터**
       `canonical` 기본 출력 (현재 어떤 페이지도 넘기지 않아 한 번도 렌더되지 않음),
       포스트에 `og:type=article` + `article:published_time`, `og:site_name`, `twitter:card`, `BlogPosting` JSON-LD.
