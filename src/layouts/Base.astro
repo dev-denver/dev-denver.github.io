@@ -53,6 +53,13 @@ const { title, meta_title, description, image, noindex, canonical } =
     }
     <!-- favicon -->
     <link rel="shortcut icon" href={config.site.favicon} />
+    {/* RSS autodiscovery — lets a reader find the feed from the site URL. */}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={config.site.title}
+      href={new URL("rss.xml", config.site.base_url)}
+    />
     <!-- theme meta -->
     <meta name="theme-name" content="astroplate" />
     <meta name="msapplication-TileColor" content="#000000" />

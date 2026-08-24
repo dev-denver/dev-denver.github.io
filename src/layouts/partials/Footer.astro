@@ -33,9 +33,15 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
   </div>
   <div class="border-t border-border py-7 dark:border-darkmode-border">
     <div
-      class="container text-center text-text-light dark:text-darkmode-text-light"
+      class="container flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center text-text-light dark:text-darkmode-text-light"
     >
       <p set:html={markdownify(config.params.copyright)} />
+      <a
+        href="/rss.xml"
+        class="hover:text-text-dark dark:hover:text-darkmode-text-dark underline underline-offset-4"
+      >
+        RSS
+      </a>
     </div>
   </div>
 </footer>
