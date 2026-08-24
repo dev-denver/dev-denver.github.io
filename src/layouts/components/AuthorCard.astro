@@ -20,9 +20,13 @@ const { title, image, social } = data.data;
       />
     )
   }
-  <h4 class="mb-3">
+  {
+    /* h2: the cards sit directly under the page title, so h4 skipped two
+      levels. text-h4 keeps the size it had. */
+  }
+  <h2 class="text-h4 mb-3">
     <a href={`/authors/${data.id}`}>{title}</a>
-  </h4>
+  </h2>
   <p class="mb-4">
     {plainify(data.body?.slice(0, 100))}
   </p>

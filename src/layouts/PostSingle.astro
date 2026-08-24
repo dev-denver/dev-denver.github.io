@@ -34,10 +34,12 @@ const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
 <section class="section pt-7">
   <div class="container">
     <div class="row justify-center">
-      <!-- max-w caps the measure: `lg:col-8` alone runs ~880px on a wide
-           screen, well past a comfortable line length for Korean body text.
-           Applied to the whole column so the title and meta stay aligned
-           with the body. -->
+      {
+        /* max-w caps the measure: `lg:col-8` alone runs ~880px on a wide
+          screen, well past a comfortable line length for Korean body text.
+          Applied to the whole column so the title and meta stay aligned with
+          the body. */
+      }
       <article class="lg:col-8 mx-auto max-w-[46rem]">
         {
           image && (
@@ -85,9 +87,18 @@ const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
           <Content />
         </div>
         <div class="row items-start justify-between">
+          {
+            /* Inline labels, not headings: these sat at h5 under the post
+              title while the body used h2/h3, so they broke the outline. */
+          }
           <div class="mb-10 flex items-center lg:col-5 lg:mb-0">
-            <h5 class="mr-3">태그 :</h5>
-            <ul>
+            <p
+              id="post-tags-label"
+              class="text-text-light dark:text-darkmode-text-light mr-3 text-sm"
+            >
+              태그
+            </p>
+            <ul aria-labelledby="post-tags-label">
               {
                 tags.map((tag: string) => (
                   <li class="inline-block">
@@ -103,7 +114,11 @@ const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
             </ul>
           </div>
           <div class="flex items-center lg:col-4">
-            <h5 class="mr-3">공유 :</h5>
+            <p
+              class="text-text-light dark:text-darkmode-text-light mr-3 text-sm"
+            >
+              공유
+            </p>
             <Share
               className="social-icons"
               title={title}

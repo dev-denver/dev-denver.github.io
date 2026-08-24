@@ -71,7 +71,7 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     <Logo />
   </div>
 
-  <nav class="mb-8">
+  <nav class="mb-8" aria-label="주요 메뉴">
     <ul class="space-y-1">
       {
         main.map((item) => {
@@ -92,12 +92,18 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     </ul>
   </nav>
 
-  <div class="mb-8">
-    <h5
+  {
+    /* A section label, not a document heading: the sidebar precedes main, so
+      a heading here would land above the page's own top-level heading. The
+      list is named through aria-labelledby instead. */
+  }
+  <nav class="mb-8" aria-labelledby="sidebar-categories-label">
+    <p
+      id="sidebar-categories-label"
       class="mb-4 text-sm font-semibold uppercase text-text-light dark:text-darkmode-text-light"
     >
       카테고리
-    </h5>
+    </p>
     <ul class="space-y-1">
       {
         categoryItems.map(({ label, slug, count }) => {
@@ -128,7 +134,7 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
         })
       }
     </ul>
-  </div>
+  </nav>
 
   <div class="mt-auto pt-6">
     <Social source={social.main} className="social-icons mb-5" />
