@@ -164,11 +164,27 @@ claude -c        # 직전 세션 이어받기
 
 ---
 
+## Phase 6 — 후속 정리
+
+- [x] **PR 16 · 빈 카테고리 페이지 제거 + 폰트 로딩 최적화** — #24
+      0건 카테고리는 사이드바에서도 `/categories`에서도 링크되지 않는 고아 페이지였다.
+      생성을 중단해 사이트맵 13 → 10.
+      `IBM Plex Sans KR 500`은 사용처가 죽은 코드뿐이라 제거 (폰트 CSS 308KB → 249KB).
+      Google Fonts 스타일시트를 논블로킹으로 전환.
+
+      > Lighthouse 실측 (headless chromium, `astro preview`): **성능 95~99 / 접근성 100 /
+      > 모범사례 100 / SEO 100**. 폰트 논블로킹 전환으로 성능 96 → 98, FCP 2.1s → 1.4s,
+      > CLS는 0.065로 변동 없음.
+      > 주의: Google Fonts를 실제로 받아오므로 측정 편차가 크다. 같은 빌드에서 96/96/90이
+      > 나온 적이 있다 — 한 번 측정으로 판단하지 말 것.
+
 ## 남은 것 / 다음에 볼 만한 것
 
-- 빈 카테고리 3개(`언어/CS 기초`, `프론트엔드`, `백엔드/인프라`)가 사이트맵에 들어간다.
-  글이 쌓이면 자연히 해소되지만, 그전까지는 얇은 페이지다.
-- 숏코드(`Accordion`/`Button`/`Notice`/`Tab`/`Video`/`Youtube`)는 아직 어떤 글에서도 쓰이지 않는다.
-- `astro check`가 `markdown.remarkPlugins ... deprecated` 경고를 낸다. 설정은 이미
-  `unified({...})`로 넘기고 있어 오탐으로 보이나 확인 필요.
-- Lighthouse 실측, 실제 브라우저에서 라이트/다크 × 데스크톱/모바일 육안 확인.
+- **MDX와 숏코드를 유지할지 결정 필요.** `astro check`의
+  `markdown.remarkPlugins ... deprecated` 경고는 우리 설정이 아니라 `@astrojs/mdx`가
+  유발한다 (`mdx()` 제거 시 사라지고, 우리 rehype 플러그인 제거 시엔 그대로).
+  현재 콘텐츠는 전부 `.md`이고 숏코드(`Accordion`/`Button`/`Notice`/`Tab`/`Video`/`Youtube`)는
+  어디서도 쓰이지 않는다. MDX를 빼면 경고와 숏코드가 함께 사라지지만, MDX 작성 기능도 없어진다.
+- 폰트를 더 줄이려면 헤딩용 IBM Plex Sans KR을 빼고 Noto Sans KR 하나로 통일하는 방법이 있다
+  (폰트 CSS 약 절반). 다만 헤딩의 서체 구분이 사라지므로 디자인 판단이 필요하다.
+- 실제 브라우저에서 라이트/다크 × 데스크톱/모바일 육안 확인.

@@ -137,7 +137,20 @@ const structuredData = {
     <!-- google font css -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href={googleFontsHref} />
+    {
+      /* Loaded without blocking render. Measured at ~1.48s of render-blocking
+        time, dominated by the third-party round trip rather than payload size.
+        The stylesheet already uses display=swap, so text is painted in the
+        fallback face either way — blocking only delayed everything else. */
+    }
+    <link rel="preload" as="style" href={googleFontsHref} />
+    <link
+      rel="stylesheet"
+      href={googleFontsHref}
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript><link rel="stylesheet" href={googleFontsHref} /></noscript>
 
     <!-- responsive meta -->
     <meta

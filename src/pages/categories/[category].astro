@@ -7,17 +7,13 @@ import { sortByDate } from "@/lib/utils/sortFunctions";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import { humanize, slugify } from "@/lib/utils/textConverter";
 
-// Dynamic categories from post frontmatter, plus the fixed sidebar list — the
-// sidebar links those even at zero posts, so they need a page to land on.
+// Only categories that actually have posts. The fixed sidebar list used to be
+// unioned in so every configured category had a page, but nothing links those:
+// the sidebar renders zero-count categories as disabled spans and /categories
+// lists only post-derived ones. They were orphan pages that still landed in
+// the sitemap.
 export async function getStaticPaths() {
-  const categoriesFromPosts = await getTaxonomy("blog", "categories");
-  const fixedCategorySlugs = categoriesConfig.list.map(({ label }) =>
-    slugify(label),
-  );
-  const categories = [
-    ...new Set([...categoriesFromPosts, ...fixedCategorySlugs]),
-  ];
-
+  const categories = await getTaxonomy("blog", "categories");
   return categories.map((category) => ({ params: { category } }));
 }
 
