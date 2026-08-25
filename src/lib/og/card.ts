@@ -14,7 +14,7 @@ const COLORS = {
   rule: "#eaeaea",
 };
 
-export interface OgCard {
+interface OgCard {
   title: string;
   meta: string;
 }

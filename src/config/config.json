@@ -6,10 +6,6 @@
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
-    "logo": "",
-    "logo_darkmode": "",
-    "logo_width": "150",
-    "logo_height": "30",
     "logo_text": "denver.log"
   },
 
@@ -22,12 +18,6 @@
     "blog_folder": "blog"
   },
 
-  "announcement": {
-    "enable": false,
-    "content": "",
-    "expire_days": 7
-  },
-
   "params": {
     "copyright": "© denver"
   },
@@ -36,11 +26,6 @@
     "enable": true,
     "label": "이력서 보기",
     "link": "https://my.surfit.io/w/966385452"
-  },
-
-  "google_tag_manager": {
-    "enable": false,
-    "gtm_id": "GTM-XXXXXX"
   },
 
   "giscus": {
