@@ -2,7 +2,6 @@
 import BlogCard from "@/components/BlogCard.astro";
 import HeadingAnchors from "@/components/HeadingAnchors.astro";
 import PostNav from "@/components/PostNav.astro";
-import Share from "@/components/Share.astro";
 import Toc from "@/components/Toc.astro";
 import TocScrollSpy from "@/components/TocScrollSpy.astro";
 import Giscus from "@/helpers/Giscus.astro";
@@ -22,7 +21,7 @@ const { post } = Astro.props;
 const posts = await getSinglePage(COLLECTION_FOLDER);
 const similarPosts = similarItems(post, posts);
 const { Content, headings } = await render(post);
-const { title, description, author, categories, image, date, tags } = post.data;
+const { title, author, categories, image, date, tags } = post.data;
 
 // Newest first, so the entry after this one in the list is the older post.
 const sortedPosts = sortByDate(posts);
@@ -109,19 +108,6 @@ const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
                 ))
               }
             </ul>
-          </div>
-          <div class="flex items-center lg:col-4">
-            <p
-              class="text-text-light dark:text-darkmode-text-light mr-3 text-sm"
-            >
-              공유
-            </p>
-            <Share
-              className="social-icons"
-              title={title}
-              description={description}
-              slug={post.id}
-            />
           </div>
         </div>
         <PostNav previous={previousPost} next={nextPost} />
