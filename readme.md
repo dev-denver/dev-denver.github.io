@@ -52,7 +52,6 @@ npm run dev      # localhost:4321
 | `npm run format`        | Prettier로 코드 포맷팅            |
 | `npm run format:check`  | 포맷 검사만 수행 (CI에서 사용)    |
 | `npm run check`         | Astro 타입 체크                   |
-| `npm run generate-json` | 태그/카테고리 등 JSON 인덱스 생성 |
 | `npm run generate-llms` | `llms.txt` / `llms-full.txt` 생성 |
 
 ## 프로젝트 구조
@@ -87,8 +86,16 @@ draft: false
 본문 내용을 작성합니다.
 ```
 
-- `draft: true`로 두면 빌드에서 제외됩니다.
+- `draft: true`로 두면 빌드에서 제외됩니다. 이때 `/blog/<슬러그>` 페이지 자체가 생성되지
+  않아 `npm run dev`에서도 보이지 않으므로, 미리보기는 작업 브랜치에서 `draft: false`로
+  두고 합니다.
 - 사용 가능한 카테고리 목록은 `src/config/categories.json`에서 관리합니다.
+- 파일명(확장자 제외)이 그대로 URL 슬러그가 됩니다. 소문자 ASCII kebab-case로 짓습니다.
+
+다른 프로젝트에서 공부한 내용을 가져와 글로 만드는 흐름, 태그·이미지 규칙, MDX 컴포넌트
+목록은 [`docs/authoring/posting.md`](docs/authoring/posting.md)에 정리되어 있습니다.
+외부 레포에 붙여넣어 쓰는 캡처 프롬프트는
+[`docs/authoring/capture-prompt.md`](docs/authoring/capture-prompt.md)에 있습니다.
 
 ## 사이트 설정
 
