@@ -216,6 +216,57 @@ claude -c        # 직전 세션 이어받기
       > `forcePseudoState`로 hover 칩과 `:focus-visible` 외곽선 확인.
       > 사이드바에 페이지 `h1`보다 앞서는 헤딩이 새로 생기지 않았다(`aria-labelledby` 유지).
 
+## Phase 7 — 정리·최적화
+
+- [x] **PR 19 · 죽은 코드·미사용 의존성 정리 + 이미지 재인코딩** — #28
+      `Share.astro`(공유 버튼 제거의 잔재), `Announcement.tsx` + `config.announcement`
+      (`enable: false`인데 `client:only`라 페이지마다 하이드레이션 루트를 하나 더 만들고
+      있었다), `scripts/removeDarkmode.js`, `styles/utilities.css` 전체
+      (`form-input`/`form-label`/`bg-gradient` 모두 사용처 0), `.btn-sm`, `.modal*`.
+      의존성은 `@digi4care/astro-google-tagmanager`(플레이스홀더 상태),
+      `prettier-plugin-tailwindcss`(`.prettierrc`에 등록조차 안 돼 무동작), `vite`(중복 선언).
+      `Logo.astro`의 이미지 로고 분기는 `site.logo`가 늘 빈 값이고 override 호출부도 없어
+      한 번도 렌더되지 않았다 — 텍스트 전용으로 줄이고 죽은 config 키 4개 제거.
+      파비콘 70KB → 7.2KB(128색 팔레트), 아바타 700KB → 145KB.
+
+      > 오탐 주의: **`tailwind-bootstrap-grid`는 살아 있다.** 출력 CSS에서 `.col-*`가
+      > 안 보이는 건 전부 `.lg\:col-8` 처럼 이스케이프된 반응형 변형이기 때문이며,
+      > 레이아웃 17곳의 `container`와 10곳의 `row`가 여기 의존한다. 제거하면 깨진다.
+
+- [x] **PR 20 · 검색 바닐라 포팅 + 인덱스 엔드포인트화** — #29
+      검색 모달 하나 때문에 전 페이지가 React 런타임을 받고 있었다.
+      **페이지당 JS 85,543 → 9,225 bytes (gzip), 89% 감소.** `client:` 지시자 0개.
+      `.json/search.json`을 `import` 해서 **모든 글의 본문 전체**가 JS 번들에 인라인되던
+      것을 `/search.json` 엔드포인트 + 첫 오픈 시 `fetch`로 전환, 본문 대신 빌드 타임
+      `plainify` 발췌 1000자. `scripts/jsonGenerator.js`·`gray-matter`·`.json/` 폴더 제거.
+      초안/미래 글 필터를 `lib/utils/publishedPosts.ts`로 합쳐 RSS와 공유
+      (RSS가 놓치던 `--buildDrafts`/`--buildFuture`도 이제 동작한다).
+
+      > **`ClientRouter` 주의**: document 레벨 리스너는 모듈 스코프에서 한 번만 등록하고
+      > 페이지마다 새로 생기는 다이얼로그는 `controller` 참조로 갈아끼운다.
+      > `astro:page-load`마다 다시 붙이면 탐색할 때마다 쌓인다 (PR 10에서 고쳤던 종류의 누수).
+
+      > 검증: 빌드된 스크립트를 빌드된 HTML 위에서 jsdom으로 구동해 41개 항목 통과.
+      > **실제 브라우저 외형 확인은 못 했다** — 이 환경에서 headless chrome 다운로드가 막힌다.
+
+- [x] **PR 21 · OG 폰트 서브셋 1회 요청** — #30
+      `loadKoreanSubset`의 캐시 키에 글자 집합이 들어가 글마다 달라져 **한 번도 적중하지
+      않았다.** `primeKoreanSubsets()`로 전체 글의 문자 합집합을 무게별 1회만 받는다.
+      카드 3장 기준 폰트 요청 12회 → **4회(상수)**.
+
+      > 함정: 프라임된 promise를 rejected 상태로 저장하면 아무도 즉시 await 하지 않아
+      > Node가 `UnhandledPromiseRejection`으로 빌드를 죽인다. 실패 시 `null`로 resolve.
+      > 폰트 실패 → 정적 이미지 폴백은 `fetch` 강제 실패로 검증했다.
+
+- [x] **PR 22 · llms 생성기 죽은 SSR 경로 제거** — #31
+      859 → 488줄, **산출물 12개 파일 바이트 일치.** `output: "static"`이라 실행될 수 없는
+      코드였다: `astro.config.mjs`를 정규식으로 재작성해 임시 `.mjs`를 쓰고 `import()`
+      하던 `getAstroI18nConfig()`(i18n이 없어 늘 `null` 반환), `dist/server/entry.mjs`를
+      `spawn` 하는 임시 서버 일체, `discoverSsrPageRoutes`, `getClientDir`.
+
+      > llms 생성기 자체는 **정상 동작한다**. 로컬 `dist`가 비어 보였던 건 `npm run build`가
+      > 아니라 `astro build`만 돌렸기 때문이었다.
+
 ## 결정된 것 (다시 논의하지 말 것)
 
 - **MDX와 숏코드는 유지한다.** `astro check`의 `markdown.remarkPlugins ... deprecated`
@@ -233,4 +284,11 @@ claude -c        # 직전 세션 이어받기
 - 사이드바가 0건 카테고리 3개를 비활성 상태로 계속 보여준다. 예정 주제를 드러내는
   효과는 있지만 "0"이 셋 나열되는 인상도 있다 — 글이 쌓이면 자연히 해소된다.
 - Lighthouse 재측정 시 주의: Google Fonts를 실제로 받아오므로 편차가 크다.
-  같은 빌드로 3회 이상 돌려 중앙값을 볼 것.
+  같은 빌드로 3회 이상 돌려 중앙값을 볼 것. React 제거 후 재측정할 만하다.
+- **검색 모달 외형을 실제 브라우저에서 한 번 볼 것** (#29). 클래스명은 전부 유지했고
+  jsdom으로 동작은 41개 항목 검증했지만 CSS/레이아웃은 확인하지 못했다.
+- `@tailwindcss/forms`는 남겨 뒀다. `form-input`/`form-label`을 지운 뒤에도 검색
+  입력창 기본 리셋에 영향을 줄 수 있어, 육안 확인 뒤에 제거 여부를 정하는 게 안전하다.
+- Astro가 `@astrojs/react` 때문에 react-dom 청크(약 191KB)를 여전히 `dist/_astro/`에
+  내보낸다. 어떤 HTML도 참조하지 않아 사용자는 받지 않지만 배포 산출물에는 남는다.
+  숏코드가 `.tsx`인 한 통합을 뺄 수 없다 — 숏코드를 `.astro`로 옮기면 정리된다.
