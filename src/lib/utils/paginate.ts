@@ -1,6 +1,6 @@
 import config from "@/config/config.json";
 
-export const PAGE_SIZE: number = config.settings.pagination;
+const PAGE_SIZE: number = config.settings.pagination;
 
 /** Total pages for a list. Always at least 1, so an empty list still has page 1. */
 export const totalPageCount = (itemCount: number): number =>

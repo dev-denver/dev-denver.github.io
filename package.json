@@ -13,8 +13,7 @@
     "format": "prettier -w ./src",
     "format:check": "prettier -c ./src",
     "generate-json": "node scripts/jsonGenerator.js",
-    "generate-llms": "node scripts/llmsGenerator.js",
-    "remove-darkmode": "node scripts/removeDarkmode.js && npm run format"
+    "generate-llms": "node scripts/llmsGenerator.js"
   },
   "dependencies": {
     "@astrojs/check": "0.9.10",
@@ -23,7 +22,6 @@
     "@astrojs/react": "6.0.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "3.7.3",
-    "@digi4care/astro-google-tagmanager": "^2.0.0",
     "@justinribeiro/lite-youtube": "^1.9.0",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.2.4",
@@ -36,8 +34,7 @@
     "react-dom": "^19.2.8",
     "react-icons": "^5.7.0",
     "satori": "^0.33.4",
-    "sharp": "^0.35.3",
-    "vite": "^8.1.5"
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.11",
@@ -51,7 +48,6 @@
     "node-html-parser": "^9.0.0",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwind-bootstrap-grid": "^7.0.0",
     "tailwindcss": "^4.3.3",
     "turndown": "^7.2.4",

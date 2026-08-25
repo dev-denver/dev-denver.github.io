@@ -7,12 +7,7 @@ import { plainify } from "@/lib/utils/textConverter";
 import Footer from "@/partials/Footer.astro";
 import Sidebar from "@/partials/Sidebar.astro";
 import "@/styles/main.css";
-import {
-  GoogleTagmanager,
-  GoogleTagmanagerNoscript,
-} from "@digi4care/astro-google-tagmanager";
 import { ClientRouter } from "astro:transitions";
-import Announcement from "./helpers/Announcement";
 import SearchModal from "./helpers/SearchModal";
 
 // font families - build a Google Fonts CSS2 stylesheet URL from theme.json.
@@ -103,12 +98,6 @@ const structuredData = {
 <!doctype html>
 <html lang="ko">
   <head>
-    <!-- google tag manager -->
-    {
-      config.google_tag_manager.enable && (
-        <GoogleTagmanager id={config.google_tag_manager.gtm_id} />
-      )
-    }
     <!-- favicon -->
     <link rel="shortcut icon" href={config.site.favicon} />
     {/* RSS autodiscovery — lets a reader find the feed from the site URL. */}
@@ -221,19 +210,12 @@ const structuredData = {
     />
   </head>
   <body class="flex flex-col min-h-screen">
-    {/* google tag manager noscript */}
-    {
-      config.google_tag_manager.enable && (
-        <GoogleTagmanagerNoscript id={config.google_tag_manager.gtm_id} />
-      )
-    }
     <a
       href="#main-content"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-white dark:focus:bg-darkmode-primary dark:focus:text-text-dark"
     >
       본문 바로가기
     </a>
-    <Announcement client:only="react" />
     <div class="flex flex-1 flex-col lg:flex-row">
       <Sidebar />
       <div class="flex min-w-0 flex-1 flex-col">
