@@ -1,6 +1,5 @@
 ---
 import Logo from "@/components/Logo.astro";
-import Social from "@/components/Social.astro";
 import ThemeSwitcher from "@/components/ThemeSwitcher.astro";
 import categoriesConfig from "@/config/categories.json";
 import config from "@/config/config.json";
@@ -26,6 +25,20 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
   const count = allCategorySlugs.filter((c) => c === slug).length;
   return { label, slug, count };
 });
+
+// The resume, GitHub and Instagram links are all the same thing to a reader —
+// somewhere else to go — so they render as one uniform list. They just live in
+// two different config files: the resume is `navigation_button` (kept out of
+// social.json, which also feeds the footer and the author card).
+const outboundLinks = [
+  ...(navigation_button.enable
+    ? [{ label: "이력서", link: navigation_button.link }]
+    : []),
+  ...social.main.map(({ name, label, link }) => ({
+    label: label ?? name,
+    link,
+  })),
+];
 ---
 
 <input type="checkbox" id="sidebar-toggle" class="hidden" />
@@ -98,12 +111,7 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
       list is named through aria-labelledby instead. */
   }
   <nav class="mb-8" aria-labelledby="sidebar-categories-label">
-    <p
-      id="sidebar-categories-label"
-      class="mb-4 text-sm font-semibold uppercase text-text-light dark:text-darkmode-text-light"
-    >
-      카테고리
-    </p>
+    <p id="sidebar-categories-label" class="sidebar-section-label">카테고리</p>
     <ul class="space-y-1">
       {
         categoryItems.map(({ label, slug, count }) => {
@@ -155,24 +163,58 @@ const categoryItems = categoriesConfig.list.map(({ label }) => {
     )
   }
 
-  <div class="mt-auto pt-6">
-    <Social source={social.main} className="social-icons mb-5" />
-    <div class="flex items-center gap-5">
-      <ThemeSwitcher />
-      {
-        navigation_button.enable && (
-          <a
-            class="btn btn-outline-primary btn-sm"
-            href={navigation_button.link}
-            target={
-              navigation_button.link.startsWith("http") ? "_blank" : "_self"
-            }
-            rel={navigation_button.link.startsWith("http") ? "noopener" : ""}
-          >
-            {navigation_button.label}
-          </a>
-        )
-      }
+  {
+    /* The bottom zone used to invert the rail's hierarchy: two solid black
+      36px social chips outweighed every nav link above them, and the resume
+      link sat in the same row as the theme toggle, reading as a peer of a UI
+      preference rather than as a destination. Links are now one quiet list
+      shaped like the category list; the toggle is a separate settings row. */
+  }
+  <div class="mt-auto pt-8">
+    <nav
+      class="border-border dark:border-darkmode-border border-t pt-6"
+      aria-labelledby="sidebar-links-label"
+    >
+      <p id="sidebar-links-label" class="sidebar-section-label">링크</p>
+      <ul class="space-y-1">
+        {
+          outboundLinks.map(({ label, link }) => {
+            const isExternal = link.startsWith("http");
+            return (
+              <li>
+                <a
+                  class="sidebar-outlink"
+                  href={link}
+                  target={isExternal ? "_blank" : "_self"}
+                  rel={isExternal ? "noopener" : undefined}
+                >
+                  <span>{label}</span>
+                  {isExternal && (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 17 17 7M8 7h9v9" />
+                    </svg>
+                  )}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="border-border dark:border-darkmode-border mt-6 border-t pt-4">
+      <div class="sidebar-setting-row">
+        <span id="theme-switcher-label">테마 전환</span>
+        <ThemeSwitcher labelledby="theme-switcher-label" />
+      </div>
     </div>
   </div>
 </aside>
