@@ -1,6 +1,5 @@
 import { glob } from "glob";
 import { parse } from "node-html-parser";
-import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import TurndownService from "turndown";
@@ -42,97 +41,6 @@ function getConfig() {
   }
 
   return config;
-}
-
-async function getAstroI18nConfig() {
-  const astroPath = path.join(__dirname, "../astro.config.mjs");
-  if (!fs.existsSync(astroPath)) return null;
-
-  let content = fs.readFileSync(astroPath, "utf8");
-  const projectRoot = path.resolve(__dirname, "..");
-
-  // Replace JSON imports with fs.readFileSync so plain Node can evaluate the file
-  content = content.replace(
-    /import\s+config\s+from\s+['"]\.\/src\/config\/config\.json['"];?\s*\n/,
-    `const config = JSON.parse(fs.readFileSync(${JSON.stringify(path.join(projectRoot, "src/config/config.json"))}));
-`,
-  );
-  content = content.replace(
-    /import\s+languagesJSON\s+from\s+['"]\.\/src\/config\/language\.json['"];?\s*\n/,
-    `const languagesJSON = JSON.parse(fs.readFileSync(${JSON.stringify(path.join(projectRoot, "src/config/language.json"))}));
-`,
-  );
-  content = content.replace(
-    /import\s+theme\s+from\s+['"]\.\/src\/config\/theme\.json['"];?\s*\n/,
-    `const theme = JSON.parse(fs.readFileSync(${JSON.stringify(path.join(projectRoot, "src/config/theme.json"))}));
-`,
-  );
-
-  // Remove named imports from astro/config (we polyfill them below)
-  content = content.replace(
-    /import\s+\{[^}]*defineConfig[^}]*\}\s+from\s+['"]astro\/config['"];?\s*\n/,
-    "\n",
-  );
-
-  // Stub remaining package imports so the config object evaluates safely
-  const stubImports = [
-    {
-      regex: /import\s+mdx\s+from\s+['"]@astrojs\/mdx['"];?\s*\n/,
-      name: "mdx",
-    },
-    {
-      regex: /import\s+react\s+from\s+['"]@astrojs\/react['"];?\s*\n/,
-      name: "react",
-    },
-    {
-      regex: /import\s+sitemap\s+from\s+['"]@astrojs\/sitemap['"];?\s*\n/,
-      name: "sitemap",
-    },
-    {
-      regex: /import\s+tailwindcss\s+from\s+['"]@tailwindcss\/vite['"];?\s*\n/,
-      name: "tailwindcss",
-    },
-    {
-      regex: /import\s+AutoImport\s+from\s+['"]astro-auto-import['"];?\s*\n/,
-      name: "AutoImport",
-    },
-    {
-      regex: /import\s+remarkCollapse\s+from\s+['"]remark-collapse['"];?\s*\n/,
-      name: "remarkCollapse",
-    },
-    {
-      regex: /import\s+remarkToc\s+from\s+['"]remark-toc['"];?\s*\n/,
-      name: "remarkToc",
-    },
-    { regex: /import\s+sharp\s+from\s+['"]sharp['"];?\s*\n/, name: "sharp" },
-  ];
-
-  for (const { regex, name } of stubImports) {
-    content = content.replace(regex, `const ${name} = () => ({});\n`);
-  }
-
-  // Prepend fs import and polyfills
-  const tempContent = `import fs from "node:fs";
-const defineConfig = (x) => x;
-const fontProviders = { google: () => ({}) };
-${content}`;
-
-  const tempName = `astro.config.llms-temp-${Date.now()}.mjs`;
-  const tempPath = path.join(projectRoot, tempName);
-
-  fs.writeFileSync(tempPath, tempContent, "utf8");
-
-  try {
-    const mod = await import(tempPath);
-    fs.unlinkSync(tempPath);
-    return mod.default?.i18n || null;
-  } catch (err) {
-    if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
-    console.warn(
-      `   ⚠️  Could not read i18n from astro.config.mjs: ${err.message}`,
-    );
-    return null;
-  }
 }
 
 function getLanguageFallback() {
@@ -186,16 +94,6 @@ function isDefaultLanguagePath(
 
 // ─── Path helpers ─────────────────────────────────────────────────────────────
 
-/**
- * Returns the Astro static-asset output directory.
- * In SSR mode (output: "server") Astro puts static files in dist/client/.
- * In static mode (output: "static") they go directly in dist/.
- */
-function getClientDir(distFolder) {
-  const clientDir = path.join(distFolder, "client");
-  return fs.existsSync(clientDir) ? clientDir : distFolder;
-}
-
 function normalizePattern(baseDir, pattern) {
   const cleanPattern = pattern.replace(/^\/+/, "");
   const fullPath = path.join(baseDir, cleanPattern);
@@ -211,18 +109,18 @@ function normalizePattern(baseDir, pattern) {
   return fullPath;
 }
 
-async function discoverHtmlFiles(clientDir, excludePatterns, includePatterns) {
+async function discoverHtmlFiles(distFolder, excludePatterns, includePatterns) {
   const patterns =
     includePatterns?.length > 0
-      ? includePatterns.map((p) => normalizePattern(clientDir, p))
-      : [path.join(clientDir, "**/*.html")];
+      ? includePatterns.map((p) => normalizePattern(distFolder, p))
+      : [path.join(distFolder, "**/*.html")];
 
   const userExcludes = (excludePatterns || []).map((p) =>
-    normalizePattern(clientDir, p),
+    normalizePattern(distFolder, p),
   );
 
   const ignore = [
-    ...DEFAULT_EXCLUDES.map((p) => path.join(clientDir, p)),
+    ...DEFAULT_EXCLUDES.map((p) => path.join(distFolder, p)),
     ...userExcludes,
   ];
 
@@ -233,8 +131,8 @@ async function discoverHtmlFiles(clientDir, excludePatterns, includePatterns) {
   return files.sort();
 }
 
-function fileToUrlPath(filePath, clientDir) {
-  const relativePath = filePath.replace(path.resolve(clientDir), "");
+function fileToUrlPath(filePath, distFolder) {
+  const relativePath = filePath.replace(path.resolve(distFolder), "");
   let urlPath = relativePath.replace(/\\/g, "/").replace(/^\//, "");
 
   urlPath = urlPath.replace(/\.html$/, "");
@@ -303,190 +201,6 @@ async function processHtml(html, llmsConfig) {
 async function processHtmlFile(filePath, llmsConfig) {
   const html = fs.readFileSync(filePath, "utf8");
   return processHtml(html, llmsConfig);
-}
-
-/**
- * Fetches a page from a server and processes it as HTML.
- * Returns null if the fetch fails or the page returns an error status.
- */
-async function fetchAndProcessPage(url, llmsConfig) {
-  try {
-    const response = await fetch(url, {
-      headers: { Accept: "text/html" },
-      signal: AbortSignal.timeout(10_000),
-    });
-
-    if (!response.ok) return null;
-
-    const html = await response.text();
-    return processHtml(html, llmsConfig);
-  } catch {
-    return null;
-  }
-}
-
-// ─── Temporary server management ──────────────────────────────────────────────
-
-const TEMP_PORT = 14321;
-const TEMP_HOST = "127.0.0.1";
-
-/**
- * Checks if a server is already reachable at the given URL.
- */
-async function isServerRunning(url) {
-  try {
-    const r = await fetch(url + "/", {
-      signal: AbortSignal.timeout(2_000),
-      headers: { Accept: "text/html" },
-    });
-    return r.status < 500;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Spawns dist/server/entry.mjs on TEMP_PORT and waits until it's ready.
- * Returns { process, baseUrl } or null if it can't be started.
- */
-async function startTempServer(distFolder) {
-  const entryPath = path.join(distFolder, "server", "entry.mjs");
-
-  if (!fs.existsSync(entryPath)) {
-    console.log(
-      "   ⚠️  No standalone server entry (dist/server/entry.mjs) found.",
-    );
-    return null;
-  }
-
-  console.log(
-    `   Spawning built server on port ${TEMP_PORT} to render SSR pages...`,
-  );
-
-  const serverProcess = spawn(process.execPath, [entryPath], {
-    env: {
-      ...process.env,
-      PORT: String(TEMP_PORT),
-      HOST: TEMP_HOST,
-    },
-    stdio: ["ignore", "pipe", "pipe"],
-    detached: false,
-  });
-
-  serverProcess.stderr.on("data", (d) => {
-    // Suppress noise but keep it available for debugging
-    if (process.env.LLMS_DEBUG) process.stderr.write(d);
-  });
-
-  const tempBaseUrl = `http://${TEMP_HOST}:${TEMP_PORT}`;
-
-  // Poll until the server responds or timeout
-  const ready = await new Promise((resolve) => {
-    const TIMEOUT_MS = 20_000;
-    const POLL_MS = 400;
-
-    const deadline = setTimeout(() => {
-      clearInterval(poll);
-      resolve(false);
-    }, TIMEOUT_MS);
-
-    const poll = setInterval(async () => {
-      try {
-        const r = await fetch(tempBaseUrl + "/", {
-          signal: AbortSignal.timeout(1_000),
-        });
-        if (r.status < 500) {
-          clearInterval(poll);
-          clearTimeout(deadline);
-          resolve(true);
-        }
-      } catch {
-        // not ready yet
-      }
-    }, POLL_MS);
-
-    serverProcess.on("error", () => {
-      clearInterval(poll);
-      clearTimeout(deadline);
-      resolve(false);
-    });
-
-    serverProcess.on("exit", (code) => {
-      if (code !== null) {
-        clearInterval(poll);
-        clearTimeout(deadline);
-        resolve(false);
-      }
-    });
-  });
-
-  if (!ready) {
-    console.log("   ⚠️  Temp server did not become ready in time.");
-    serverProcess.kill();
-    return null;
-  }
-
-  console.log(`   ✓ Temp server ready at ${tempBaseUrl}`);
-  return { process: serverProcess, baseUrl: tempBaseUrl };
-}
-
-function stopTempServer(serverHandle) {
-  if (serverHandle?.process) {
-    serverHandle.process.kill();
-    console.log("   Stopped temporary server.\n");
-  }
-}
-
-// ─── SSR page discovery from source ──────────────────────────────────────────
-
-/**
- * Scans src/pages/ for static (non-dynamic) route files and returns their
- * URL paths. Dynamic routes ([slug].astro) and the api/ folder are excluded
- * since they either already have HTML files or are API-only.
- */
-function discoverSsrPageRoutes(srcPagesDir, basePath) {
-  if (!fs.existsSync(srcPagesDir)) return [];
-
-  const routes = [];
-
-  function scanDir(dir, urlPrefix) {
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-    for (const entry of entries) {
-      const name = entry.name;
-
-      // Skip hidden items and the api/ directory
-      if (name.startsWith(".") || name === "api") continue;
-
-      const fullPath = path.join(dir, name);
-
-      if (entry.isDirectory()) {
-        scanDir(fullPath, `${urlPrefix}/${name}`);
-      } else if (
-        entry.isFile() &&
-        /\.(astro|md|mdx|ts|js)$/.test(name) &&
-        !name.startsWith("_") &&
-        !name.startsWith("[") // skip dynamic routes — they have per-entry HTML files
-      ) {
-        const stem = name.replace(/\.(astro|md|mdx|ts|js)$/, "");
-
-        if (stem === "404") continue;
-
-        const routePath =
-          stem === "index" ? urlPrefix || "/" : `${urlPrefix}/${stem}`;
-
-        const normalizedRoute = routePath || "/";
-
-        if (isApiRoute(normalizedRoute)) continue;
-
-        routes.push(normalizedRoute);
-      }
-    }
-  }
-
-  scanDir(srcPagesDir, basePath === "/" ? "" : basePath.replace(/\/$/, ""));
-
-  return [...new Set(routes)].sort();
 }
 
 // ─── Output generators ────────────────────────────────────────────────────────
@@ -594,12 +308,8 @@ async function generateLlmsFiles() {
   const config = getConfig();
   const llms = config.llms;
 
-  const astroI18n = await getAstroI18nConfig();
-  const fallback = getLanguageFallback();
-
-  const languages = astroI18n?.locales || fallback.languages;
-  const defaultLanguage = astroI18n?.defaultLocale || fallback.defaultLanguage;
-  const defaultLanguageInSubdir = fallback.defaultLanguageInSubdir;
+  const { languages, defaultLanguage, defaultLanguageInSubdir } =
+    getLanguageFallback();
 
   const distFolder = path.join(__dirname, "../dist");
 
@@ -608,23 +318,14 @@ async function generateLlmsFiles() {
     process.exit(1);
   }
 
-  // In SSR mode static assets live in dist/client/; in static mode in dist/
-  const clientDir = getClientDir(distFolder);
-  const isSSR = clientDir !== distFolder;
-
-  console.log(
-    `📂 Output mode: ${isSSR ? "SSR (dist/client)" : "Static (dist)"}`,
-  );
-
   const siteUrl = config.site.base_url.replace(/\/$/, "");
-  const basePath = (config.site.base_path || "/").replace(/\/$/, "") || "/";
   const siteName = config.site.title;
   const siteDescription = config.metadata?.meta_description || "";
 
-  // ── Step 1: Discover pre-rendered HTML files ────────────────────────────
+  // ── Discover pre-rendered HTML files ────────────────────────────────────
   console.log("\n🔍 Discovering pre-rendered HTML files...");
   const htmlFiles = await discoverHtmlFiles(
-    clientDir,
+    distFolder,
     llms.exclude,
     llms.include,
   );
@@ -635,7 +336,7 @@ async function generateLlmsFiles() {
 
   for (const file of htmlFiles) {
     try {
-      const urlPath = fileToUrlPath(file, clientDir);
+      const urlPath = fileToUrlPath(file, distFolder);
 
       if (isApiRoute(urlPath)) {
         console.log(`   ⤷ Skipping API route: ${urlPath}`);
@@ -667,85 +368,11 @@ async function generateLlmsFiles() {
       pages.push({
         urlPath,
         filePath: file,
-        source: "prerendered",
         ...pageData,
       });
       console.log(`   ✓ [static] ${urlPath}: "${pageData.title}"`);
     } catch (error) {
       console.error(`   ✗ Error processing ${file}: ${error.message}`);
-    }
-  }
-
-  // ── Step 2: Fetch SSR-only pages ───────────────────────────────────────
-  if (isSSR) {
-    const srcPagesDir = path.join(__dirname, "../src/pages");
-    const ssrRoutes = discoverSsrPageRoutes(srcPagesDir, basePath);
-    const missingRoutes = ssrRoutes
-      .filter((r) =>
-        isDefaultLanguagePath(
-          r,
-          languages,
-          defaultLanguage,
-          defaultLanguageInSubdir,
-        ),
-      )
-      .filter((r) => !seenPaths.has(r));
-
-    if (missingRoutes.length === 0) {
-      console.log("\n✓ All source routes already captured by static HTML.");
-    } else {
-      console.log(
-        `\n🌐 Fetching ${missingRoutes.length} SSR-only route(s): ${missingRoutes.join(", ")}`,
-      );
-
-      // Determine which server to use: the configured siteUrl or a temp server
-      let fetchBase = null;
-      let tempServerHandle = null;
-
-      if (await isServerRunning(siteUrl)) {
-        fetchBase = siteUrl;
-        console.log(`   Using running server at ${fetchBase}`);
-      } else {
-        tempServerHandle = await startTempServer(distFolder);
-        if (tempServerHandle) {
-          fetchBase = tempServerHandle.baseUrl;
-        } else {
-          console.log(
-            "   ⚠️  No server available. SSR pages will be skipped.\n" +
-              "       Run 'pnpm preview' before 'pnpm generate-llms' to include them.",
-          );
-        }
-      }
-
-      if (fetchBase) {
-        for (const route of missingRoutes) {
-          const url = `${fetchBase}${route}`;
-          process.stdout.write(`   ⤷ Fetching ${route} ... `);
-
-          const pageData = await fetchAndProcessPage(url, llms);
-
-          if (!pageData) {
-            console.log("❌ failed");
-            continue;
-          }
-
-          if (!pageData.title) {
-            console.log("⚠️  no title, skipping");
-            continue;
-          }
-
-          seenPaths.add(route);
-          pages.push({
-            urlPath: route,
-            filePath: null,
-            source: "ssr",
-            ...pageData,
-          });
-          console.log(`✓ "${pageData.title}"`);
-        }
-      }
-
-      stopTempServer(tempServerHandle);
     }
   }
 
@@ -775,13 +402,13 @@ async function generateLlmsFiles() {
         }
       }
     }
-    deleteStaleMdFiles(clientDir);
+    deleteStaleMdFiles(distFolder);
 
     for (const page of pages) {
       // Home → index.md, everything else → <url-path>.md
       const mdRelative =
         page.urlPath === "/" ? "index" : page.urlPath.replace(/^\//, "");
-      const mdPath = path.join(clientDir, mdRelative + ".md");
+      const mdPath = path.join(distFolder, mdRelative + ".md");
 
       const mdContent = generateMarkdownFile(page, siteUrl);
 
@@ -808,7 +435,7 @@ async function generateLlmsFiles() {
       siteDescription,
       llms.generate_individual_md,
     );
-    const llmsTxtPath = path.join(clientDir, "llms.txt");
+    const llmsTxtPath = path.join(distFolder, "llms.txt");
 
     fs.writeFileSync(llmsTxtPath, llmsTxtContent, "utf8");
     console.log(`   ✓ ${path.relative(distFolder, llmsTxtPath)}\n`);
@@ -823,7 +450,7 @@ async function generateLlmsFiles() {
       siteUrl,
       siteName,
     );
-    const llmsFullPath = path.join(clientDir, "llms-full.txt");
+    const llmsFullPath = path.join(distFolder, "llms-full.txt");
 
     fs.writeFileSync(llmsFullPath, llmsFullContent, "utf8");
     console.log(`   ✓ ${path.relative(distFolder, llmsFullPath)}\n`);
@@ -833,23 +460,14 @@ async function generateLlmsFiles() {
   console.log("✅ LLMS generation complete!\n");
   console.log("Summary:");
   console.log(`  Pages processed : ${pages.length}`);
-  console.log(
-    `  Sources         : ${pages.filter((p) => p.source === "prerendered").length} static HTML, ${pages.filter((p) => p.source === "ssr").length} SSR-fetched`,
-  );
   if (llms.generate_individual_md) {
-    console.log(
-      `  .md files       : ${pages.length} (in ${path.relative(distFolder, clientDir)}/)`,
-    );
+    console.log(`  .md files       : ${pages.length} (in dist/)`);
   }
   if (llms.generate_llms_txt) {
-    console.log(
-      `  llms.txt        : ${path.relative(distFolder, path.join(clientDir, "llms.txt"))}`,
-    );
+    console.log(`  llms.txt        : llms.txt`);
   }
   if (llms.generate_llms_full_txt) {
-    console.log(
-      `  llms-full.txt   : ${path.relative(distFolder, path.join(clientDir, "llms-full.txt"))}`,
-    );
+    console.log(`  llms-full.txt   : llms-full.txt`);
   }
 }
 
