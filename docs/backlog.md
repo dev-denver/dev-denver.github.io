@@ -17,7 +17,7 @@ claude -c        # 직전 세션 이어받기
 2. Astro 관련 변경이면 **Astro docs MCP**로 해당 문서 확인 (`AGENTS.md` 강제)
 3. 템플릿 구조·스타일·설정 변경이면 `.agents/skills/astro-template-guidance/references/` 확인 (`AGENTS.md` 강제)
 4. 구현
-5. 로컬 검증: `npm run format` → `npm run generate-json` → `npm run check` → `npm run build`
+5. 로컬 검증: `npm run format` → `npm run check` → `npm run build`
 6. `gh pr create` — 제목은 Conventional Commits + 한국어 (기존 히스토리 컨벤션)
 7. `gh pr checks --watch` — **PR Checks 통과가 머지 조건.** 저장소에 브랜치 보호 규칙이 없으므로 이 확인을 생략하지 않는다
 8. `gh pr merge --squash --delete-branch`
