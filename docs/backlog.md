@@ -185,6 +185,37 @@ claude -c        # 직전 세션 이어받기
       홈 발췌문이 "정리해본다. **스택Astro** — 정적 사이트..."로 붙어 나왔다.
       블록 종료 태그를 공백으로 치환하도록 수정 (인라인 태그는 그대로 제거해 단어가 쪼개지지 않게).
 
+- [x] **PR 18 · 사이드바 하단 링크 블록 재구성**
+      하단 블록의 시각적 무게가 정보 위계와 반대였다 — `.social-icons`의 36px 솔리드
+      `bg-primary` 사각형 두 개가 사이드바에서 가장 강한 요소라, 주요 메뉴·카테고리보다
+      GitHub/Instagram이 세게 보였다. 무채색 팔레트에서는 대비가 유일한 신호이므로
+      가장 안 중요한 것이 가장 진한 상태였던 셈이다.
+      같은 성격의 목적지 링크 3개가 세 형태(솔리드 칩 2 + 외곽선 버튼 1)로 흩어져 있었고,
+      이력서(콘텐츠 목적지)가 테마 토글(UI 환경설정)과 한 행에 묶여 동급으로 읽혔다.
+      → 이력서·GitHub·Instagram을 `.sidebar-outlink` 한 목록으로 통합(카테고리 행과 같은
+      모양·같은 hover 칩), 테마 전환은 헤어라인 아래 별도 설정 행으로 분리.
+      외부 링크 표시는 인라인 SVG 화살표 — 이력서엔 대응 브랜드 아이콘이 없어 세 행이
+      어긋나므로 브랜드 마크는 쓰지 않았다.
+
+      > 이력서는 `social.json`이 아니라 `config.navigation_button`에 그대로 두고
+      > 사이드바에서 합성한다. `social.json`은 푸터·저자 카드에도 먹이므로 거기 넣으면
+      > 이력서가 세 곳으로 새어 나간다 (`.impeccable/critique/...:60`가 이미 뺐던 항목).
+
+      함께 고침: `social.main`이 사이드바와 푸터 양쪽에서 같은 검정 칩으로 렌더돼 한
+      페이지에 같은 아이콘 쌍이 두 번 나오던 중복 — 푸터는 기존 푸터 메뉴와 같은 밑줄
+      텍스트 링크로 낮췄다. `ThemeSwitcher`의 `class="theme-switcher undefined"`
+      (`${className}` 보간).
+      `ThemeSwitcher`에 `labelledby` prop 추가 — 보이는 "테마 전환" 라벨이 생겨
+      `sr-only` 스팬이 중복되므로, 전달되면 스팬을 빼고 `aria-labelledby`로 이름을 받는다
+      (WCAG 2.5.3, 접근 이름 = 보이는 라벨).
+      `.sidebar-section-label`은 카테고리 라벨의 유틸리티 문자열을 뽑은 것으로 두 라벨이
+      공유한다.
+
+      > 검증: headless chromium 스크린샷 (라이트/다크 × 데스크톱/모바일 드로어),
+      > CDP 접근성 트리로 `navigation "링크"` · `checkbox "테마 전환"` 단일 이름 확인,
+      > `forcePseudoState`로 hover 칩과 `:focus-visible` 외곽선 확인.
+      > 사이드바에 페이지 `h1`보다 앞서는 헤딩이 새로 생기지 않았다(`aria-labelledby` 유지).
+
 ## 결정된 것 (다시 논의하지 말 것)
 
 - **MDX와 숏코드는 유지한다.** `astro check`의 `markdown.remarkPlugins ... deprecated`

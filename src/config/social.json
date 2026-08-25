@@ -2,11 +2,13 @@
   "main": [
     {
       "name": "github",
+      "label": "GitHub",
       "icon": "FaGithub",
       "link": "https://github.com/dev-denver"
     },
     {
       "name": "instagram",
+      "label": "Instagram",
       "icon": "FaInstagram",
       "link": "https://www.instagram.com/dud._.rim/"
     }

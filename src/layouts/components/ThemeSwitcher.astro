@@ -5,18 +5,28 @@ const {
   theme_switcher,
   // default_theme,
 }: { theme_switcher: boolean; default_theme: string } = config.settings;
-const { className }: { className?: string } = Astro.props;
+// `labelledby` points at a visible label rendered by the caller. When it is
+// given, the sr-only text below would just repeat that label to screen readers,
+// so it is dropped and the input takes its name from the visible text instead
+// (WCAG 2.5.3 — the accessible name matches what is on screen).
+const { className, labelledby }: { className?: string; labelledby?: string } =
+  Astro.props;
 ---
 
 {
   theme_switcher && (
-    <div class={`theme-switcher ${className}`}>
-      <input id="theme-switcher" data-theme-switcher type="checkbox" />
+    <div class:list={["theme-switcher", className]}>
+      <input
+        id="theme-switcher"
+        data-theme-switcher
+        type="checkbox"
+        aria-labelledby={labelledby}
+      />
       <label
         for="theme-switcher"
         class="relative before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']"
       >
-        <span class="sr-only">테마 전환</span>
+        {!labelledby && <span class="sr-only">테마 전환</span>}
         <span>
           <svg
             class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 opacity-100 dark:opacity-0"

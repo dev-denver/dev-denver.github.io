@@ -1,6 +1,5 @@
 ---
 import Logo from "@/components/Logo.astro";
-import Social from "@/components/Social.astro";
 import config from "@/config/config.json";
 import menu from "@/config/menu.json";
 import social from "@/config/social.json";
@@ -31,8 +30,28 @@ const { footer }: { footer: { name: string; url: string }[] } = menu;
           }
         </ul>
       </div>
+      {
+        /* Text links, not the .social-icons chips: the sidebar already carries
+          these two on every page, so a second set of filled black squares was
+          the same links rendered twice at full volume. */
+      }
       <div class="mb-8 text-center lg:col-3 lg:mb-0 lg:mt-0 lg:text-right">
-        <Social source={social.main} className="social-icons" />
+        <ul>
+          {
+            social.main.map(({ name, label, link }) => (
+              <li class="m-3 inline-block">
+                <a
+                  class="hover:text-text-dark dark:hover:text-darkmode-text-dark underline underline-offset-4"
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                >
+                  {label ?? name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   </div>

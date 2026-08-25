@@ -25,6 +25,36 @@
   @apply text-text-light dark:text-darkmode-text-light text-sm tabular-nums;
 }
 
+/* Section names, not headings — the sidebar precedes <main>, so a heading here
+   would sit above the page's own h1. Shared by the category and link groups so
+   the two labels can't drift apart. */
+.sidebar-section-label {
+  @apply text-text-light dark:text-darkmode-text-light mb-4 text-sm font-semibold uppercase;
+}
+
+/* Outbound links (resume, GitHub, Instagram) deliberately reuse the category
+   row's shape and hover chip: they are destinations like everything else in the
+   rail, so they should not out-weigh it. No active state — none of them is ever
+   the current page. */
+.sidebar-outlink {
+  @apply text-text dark:text-darkmode-text flex items-center justify-between gap-2 rounded p-2 font-medium transition;
+  @apply hover:bg-light hover:text-text-dark dark:hover:bg-darkmode-light dark:hover:text-darkmode-text-dark;
+}
+
+.sidebar-outlink svg {
+  @apply text-text-light dark:text-darkmode-text-light h-3 w-3 shrink-0;
+}
+
+.sidebar-outlink:hover svg {
+  @apply text-text-dark dark:text-darkmode-text-dark;
+}
+
+/* p-2 matches .sidebar-outlink so the label and the toggle line up with the
+   link rows above rather than sitting proud of them. */
+.sidebar-setting-row {
+  @apply text-text-light dark:text-darkmode-text-light flex items-center justify-between gap-2 p-2 text-sm;
+}
+
 .search-trigger {
   @apply border-border dark:border-darkmode-border text-text-light dark:text-darkmode-text-light mb-8 flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm transition;
   @apply hover:bg-light hover:text-text-dark dark:hover:bg-darkmode-light dark:hover:text-darkmode-text-dark;
