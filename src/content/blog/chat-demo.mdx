@@ -1,0 +1,52 @@
+---
+title: "대화형 UI 데모"
+description: "Chat/Me/Claude 컴포넌트 확인용 임시 글"
+date: 2026-08-25T00:00:00Z
+author: "denver"
+categories: ["회고/TIL"]
+tags: ["astro"]
+draft: true
+---
+
+이 글은 `Chat`/`Me`/`Claude` shortcode 컴포넌트를 확인하기 위한 임시 데모입니다.
+
+<Chat>
+<Me>
+다형성이 뭐야?
+</Me>
+
+<Claude>
+다형성(polymorphism)은 같은 인터페이스로 서로 다른 타입의 객체를 다룰 수 있는 성질이에요. 예를 들어 TypeScript에서는 이렇게 쓸 수 있어요.
+
+```ts
+interface Shape {
+  area(): number;
+}
+
+class Circle implements Shape {
+  constructor(private r: number) {}
+  area() {
+    return Math.PI * this.r ** 2;
+  }
+}
+
+class Square implements Shape {
+  constructor(private side: number) {}
+  area() {
+    return this.side ** 2;
+  }
+}
+
+const shapes: Shape[] = [new Circle(2), new Square(3)];
+shapes.forEach((s) => console.log(s.area()));
+```
+
+`Shape` 타입만 알면 `Circle`이든 `Square`든 똑같이 `area()`를 호출할 수 있죠.
+</Claude>
+
+<Me>
+오 이해했어. 그럼 이 개념으로 글 하나 정리해줘
+</Me>
+</Chat>
+
+확인이 끝나면 이 글은 삭제하거나 실제 내용으로 교체하면 됩니다.

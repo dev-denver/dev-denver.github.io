@@ -161,6 +161,47 @@
   @apply max-h-screen;
 }
 
+/* chat */
+.chat {
+  @apply mb-6 flex flex-col gap-4;
+}
+
+.chat-turn {
+  @apply flex max-w-[85%] flex-col gap-1;
+}
+
+.chat-turn--me {
+  @apply ml-auto items-end;
+}
+
+.chat-turn--claude {
+  @apply mr-auto items-start;
+}
+
+.chat-name {
+  @apply text-text-light dark:text-darkmode-text-light px-1 text-xs font-medium;
+}
+
+.chat-bubble {
+  @apply rounded-2xl px-4 py-3 text-base leading-[1.85];
+}
+
+.chat-bubble p {
+  @apply mb-2 last:mb-0;
+}
+
+.chat-turn--me .chat-bubble {
+  @apply bg-primary text-white dark:bg-darkmode-primary dark:text-text-dark rounded-br-sm;
+}
+
+.chat-turn--claude .chat-bubble {
+  @apply bg-light text-text-dark dark:bg-darkmode-light dark:text-darkmode-text-dark rounded-bl-sm;
+}
+
+.chat-bubble .code-block {
+  @apply my-2;
+}
+
 /* modal */
 .modal {
   @apply fixed inset-0 z-40 hidden h-full w-full overflow-auto;
